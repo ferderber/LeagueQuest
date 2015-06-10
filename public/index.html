@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <!--<link rel="import" href="components/championList.html">-->
+    <link rel="import" href="components/lq-login.html">
+    <link rel="import" href="components/lq-signup.html">
+    <link rel="import" href="bower_components/app-router/app-router.html">
+    <link rel="import" href="bower_components/pushstate-anchor/pushstate-anchor.html">
+  </head>
+  <body>
+    <nav>
+      <a is="pushstate-anchor" href="#/home">Home</a>
+      <a is="pushstate-anchor" href="#/login">Login</a>
+      <a is="pushstate-anchor" href="#/signup">Signup</a>
+    </nav>
+    <app-router>
+      <app-route path="/home" import="/pages/home.html"></app-route>
+      <app-route path="/signup" import="/components/lq-signup.html"></app-route>
+      <app-route path="/login" import="/components/lq-login.html"></app-route>
+      <app-route path="/user/home" import="/components/summoner-summary.html"></app-route>
+    </app-router>
+  </body>
+</html>

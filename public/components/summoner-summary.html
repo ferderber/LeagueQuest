@@ -1,0 +1,31 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+
+<dom-module id="summoner-summary">
+  <template>
+    <paper-button raised>Test</paper-button>      
+    <iron-ajax 
+            id="ironAjax" 
+            url="/api/getSummoner"
+            method="post"
+            handle-as="json"
+            on-response="handleResponse">
+    </iron-ajax>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'summoner-summary',
+  ready: function() {
+    this.$.ironAjax.generateRequest();
+  },
+  handleResponse: function(r) {
+    console.log(r);
+  }
+});
+</script>

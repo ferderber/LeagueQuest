@@ -1,0 +1,34 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="stylesheet" href="css/lq-login.css">
+<dom-module id="lq-login">
+  <template>
+    <form is="iron-form" id="login" method="post" action="../auth/login" on-iron-form-response="loginResponse">
+      <paper-input name="email" label="Email"></paper-input>
+      <paper-input name="password" label="Password" type="password"></paper-input>
+      <paper-button raised onclick="submitLogin()">Login</paper-button>
+    </form>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'lq-login',
+  ready: function(){
+  },
+  loginResponse: function(r) {
+    if (r.detail.isAuthenticated) {
+      console.log('Logged in');
+      document.querySelector('app-router').go('/user/home');
+    }
+  }
+});
+function submitLogin(){
+  var form = document.querySelector('#login');
+  form.submit();
+}
+</script>

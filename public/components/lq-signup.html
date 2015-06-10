@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="region-selector.html">
+<link rel="stylesheet" href="css/lq-signup.css">
+<dom-module id="lq-signup">
+  <template>
+    <form is="iron-form" id="signup" method="post" action="../auth/signup" on-iron-form-response="signupResponse">
+      <paper-material elevation="3">
+        <paper-input name="summonerName" label="Summoner name"></paper-input>
+        <paper-input name="email" label="Email"></paper-input>
+        <paper-input name="password" label="Password" type="password"></paper-input>
+        <h5>Select your region</h5>
+        <region-selector></region-selector>
+        <br/>
+        <paper-button raised onclick="submitSignup()">Signup</paper-button>
+      </paper-material>
+    </form>
+  </template>
+</dom-module>
+<script>
+Polymer({
+  is: 'lq-signup',
+  ready: function() {
+
+  },
+  signupResponse: function (r) {
+    console.log(r);
+  },
+});
+function submitSignup() {
+  var form = document.querySelector('#signup');
+  var thing = form.serialize();
+  console.log(thing);
+  form.submit();
+}
+</script>

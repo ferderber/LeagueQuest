@@ -1,0 +1,33 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id='champion-tag'>
+  <template>
+    <div>
+      <h3>{{champion.name}}</h3>
+      <img src="{{url}}"/>
+    </div>
+  </template>
+</dom-module>
+<script>
+Polymer({
+  is: 'champion-tag',
+  properties: {
+    champion: {
+      type: Object,
+      readonly: true,
+      notify: true
+    },
+    url: {
+      type: String,
+      readonly: true,
+      notify: true,
+      computed: 'computeUrl(champion.key)'
+    }
+  },
+  computeUrl: function(key) {
+    return "http://ddragon.leagueoflegends.com/cdn/5.10.1/img/champion/" + key + ".png";
+  },
+  ready: function() {
+  }
+});
+</script>
