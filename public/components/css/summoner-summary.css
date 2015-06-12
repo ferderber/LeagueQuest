@@ -1,0 +1,33 @@
+#container {
+    background-color: #03A9F4;
+    color: #fff;
+}
+#summonerPanel {
+    padding: 20px;
+    height: 64px;
+}
+#profileIcon {
+    padding-right: 10px;
+    min-height: 64px;
+    min-width: 64px;
+    float: left;
+}
+#profileData {
+    height: 100%;
+    width: 50%;
+    display: inline-block;
+}
+
+#profileData > div {
+    min-height: 50%;
+}
+#summonerName {
+    vertical-align: bottom;
+}
+#summonerStats {
+    width: 30%;
+    height: 34px;
+    max-height:64px;
+    float: right;
+    padding: 10px;
+}

@@ -3,17 +3,46 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="stylesheet" href="css/summoner-summary.css">
 
 <dom-module id="summoner-summary">
   <template>
-    <paper-button raised>Test</paper-button>      
-    <iron-ajax 
-            id="ironAjax" 
-            url="/api/getSummoner"
-            method="post"
-            handle-as="json"
-            on-response="handleResponse">
+    <paper-material id="container" elevation="2">
+      <div id="summonerPanel">
+        <img id="profileIcon" src="{{summonerUrl}}" width="64px" height="64px"/>
+        <div id="profileData">
+          <div>Level <span>{{summoner.summonerLevel}}</span></div>
+          <div id="summonerName">{{summoner.name}}</div>
+        </div>
+        <paper-material id="summonerStats" elevation="1">
+          <div>
+            Wins: <span>{{rankedSummary.wins}}</span>
+          </div>
+          <div>
+            Loses: <span>{{rankedSummary.losses}}</span>
+          </div>
+        </paper-material>
+      </div>
+    </paper-material>
+    <paper-material>
+      <paper-radio-group id="rankedSelector" selected="ranked" on-paper-radio-group-changed="rankedSelectorChanged">
+        <paper-radio-button name="ranked" label="Ranked">Ranked</paper-radio-button>
+        <paper-radio-button name="unranked" label="Unranked">Unranked</paper-radio-button>
+      </paper-radio-group>
+    </paper-material>
+    <iron-ajax id="summonerAjax" 
+               url="/api/getSummoner"
+               method="post"
+               handle-as="json"
+               on-response="handleSummonerResponse">
+    </iron-ajax>
+    <iron-ajax id="summaryAjax"
+               url="/api/getPlayerSummary"
+               method="post"
+               handle-as="json"
+               on-response="handleSummaryResponse">
     </iron-ajax>
   </template>
 </dom-module>
@@ -21,11 +50,72 @@
 <script>
 Polymer({
   is: 'summoner-summary',
+  properties: {
+    summoner: {
+      type: Object,
+      notify: true
+    },
+    matchHistory: {
+      type: Object,
+      notify: true
+    },
+    unrankedSummary: {
+      type: Object,
+      notify: true
+    },
+    rankedSummary: {
+      type: Object,
+      notify: true
+    },
+    summonerUrl: {
+      type: String,
+      readonly: false,
+      notify: true,
+      computed: 'computeSummonerUrl(summoner.profileIconId)'
+    }
+  },
+  computeSummonerUrl: function(key) {
+    return "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
+  },
   ready: function() {
-    this.$.ironAjax.generateRequest();
+    this.$.summonerAjax.generateRequest();
   },
   handleResponse: function(r) {
-    console.log(r);
-  }
+    console.log(r.detail.response);
+  },
+  rankedSelectorChanged: function(r) {
+    console.log(r.srcElement.selected);
+
+  },
+  handleSummaryResponse: function(r) {
+    if(isAuthenticated(r)){
+      var summary = r.detail.response;
+      console.log(summary);
+      for(var i = 0; i < summary.length; i++) {
+        if(summary[i].playerStatSummaryType === 'Unranked') {
+          console.log(summary[i].aggregatedStats);
+          this.unrankedSummary = summary[i];
+        }
+        else if (summary[i].playerStatSummaryType === 'RankedSolo5x5') {
+          console.log(summary[i].aggregatedStats);
+          this.rankedSummary = summary[i];
+        }
+      }
+    }
+  },
+  handleSummonerResponse: function(r) {
+    if(isAuthenticated(r)) {
+      var summoner = r.detail.response;
+      summoner = summoner[Object.keys(summoner)[0]];
+      console.log(summoner);
+      this.summoner = summoner;
+      this.$.summaryAjax.generateRequest();
+    }
+  },
+  handleMatchHistoryResponse: function(r) {
+    if(isAuthenticated(r)) {
+      console.log(r.detail.response);
+    }
+  },
 });
 </script>

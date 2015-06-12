@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/pushstate-anchor/pushstate-anchor.html">
+<style>
+nav {
+  padding: 20px;
+}
+</style>
+
+<dom-module is="lq-navigation">
+  <template>
+    <nav>
+      <a is="pushstate-anchor" href="/#/home"><img src="qwerty" width="32px" height="32px"></a>
+      <a is="pushstate-anchor" href="/#/user/home">Home</a> 
+      <a is="pushstate-anchor" href="/#/Login">Login</a> 
+      <a is="pushstate-anchor" href="/#/Signup">Signup</a> 
+      <a is="pushstate-anchor" on-click="logout" href="/#/home">Logout</a> 
+
+    </nav>
+    <iron-ajax id="logoutAjax"
+               url="/auth/logout"
+               method="post"
+               on-response="logoutResponse">
+    </iron-ajax>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: 'lq-navigation',
+  ready: function(){
+
+  },
+  logout: function() {
+    this.$.logoutAjax.generateRequest();
+
+  },
+  logoutResponse: function(r) {
+    console.log(r);
+  }
+});
+</script>

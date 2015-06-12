@@ -14,26 +14,28 @@ router.post('/login', function(req, res) {
    User.findOne({'email': email}, function(err, u){
       if(err) {
          console.log(err);
+         return res.send({isAuthenticated: false, message: 'An error occurred'});
       }
-      u.comparePassword(password, function(err, isMatch) {
-         if (err) {
-            console.log(err);
-         }
-         if (!isMatch) {
-            console.log('invalid login');
-         }
-         else {
-            req.login(u, function (err) {
-               if(err) {
-                  console.log(err);
-               }
-               console.log(req.session);
-               console.log(req.sessionID);
-               return res.send({isAuthenticated: true});
-               //return res.send(req.user);
-            });
-         }
-      });
+      if(u != null)
+         u.comparePassword(password, function(err, isMatch) {
+            if (err) {
+               console.log(err);
+            }
+            if (!isMatch) {
+               return res.send({isAuthenticated: false, message: 'The login details were incorrect'});
+            }
+            else {
+               req.login(u, function (err) {
+                  if(err) {
+                     console.log(err);
+                  }
+                  return res.send({isAuthenticated: true});
+                  //return res.send(req.user);
+               });
+            }
+         });
+      else
+         return res.send({isAuthenticated: false, message: 'The login details were incorrect'});
    });
 });
 
@@ -59,5 +61,10 @@ router.post('/signup', function(req, res){
             return res.send(req.user.password);
          });
       });
+});
+router.post('/logout', function(req, res) {
+   req.logout();
+   console.log('logged out');
+   res.send({ isAuthenticated: false });
 });
 module.exports = router;
