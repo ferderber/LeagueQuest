@@ -41,8 +41,7 @@ router.post('/login', function(req, res) {
 
 router.post('/signup', function(req, res){
    var summonerName = req.query.summonerName;
-   var na = req.quest.na;
-   console.log(na);
+   var region = req.query.region;
    var email = req.query.email;
    var password = req.query.password;
    summonerName = summonerName.replace(/ /g, '').toLowerCase();

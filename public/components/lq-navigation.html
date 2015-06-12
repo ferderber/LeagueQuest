@@ -10,12 +10,11 @@ nav {
 <dom-module is="lq-navigation">
   <template>
     <nav>
-      <a is="pushstate-anchor" href="/#/home"><img src="qwerty" width="32px" height="32px"></a>
+      <a is="pushstate-anchor" href="/#/home"><img src="../images/insertlogohere.png" width="32px" height="32px"></a>
       <a is="pushstate-anchor" href="/#/user/home">Home</a> 
       <a is="pushstate-anchor" href="/#/Login">Login</a> 
       <a is="pushstate-anchor" href="/#/Signup">Signup</a> 
       <a is="pushstate-anchor" on-click="logout" href="/#/home">Logout</a> 
-
     </nav>
     <iron-ajax id="logoutAjax"
                url="/auth/logout"

@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="stylesheet" href="css/summoner-summary.css">
 
 <dom-module id="summoner-summary">
@@ -44,6 +45,20 @@
                handle-as="json"
                on-response="handleSummaryResponse">
     </iron-ajax>
+    <iron-localstorage
+               name="matchHistoryStorage"
+               value="matchHistory">
+
+    </iron-localstorage>
+    <iron-localstorage
+               name="summonerStorage"
+               value="{{summoner}}">
+    </iron-localstorage>
+
+    <iron-localstorage
+               name="summonerStorage"
+               value="{{summoner}}">
+    </iron-localstorage>
   </template>
 </dom-module>
 

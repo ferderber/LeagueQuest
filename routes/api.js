@@ -24,7 +24,6 @@ router.post('/getPlayerSummary', isAuthenticated, function(req, res) {
          console.log(summary);
          res.send(summary);
       });
-
 });
 
 module.exports = router;
