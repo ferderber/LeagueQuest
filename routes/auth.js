@@ -1,13 +1,18 @@
 var router = require('express').Router(),
     mongoose = require('mongoose'),
     db = mongoose.connection,
-    lolapi = require('leagueapi');
+    //lolapi = require('leagueapi');
+    lolapi = require('lolapi')(process.env.LEAGUEKEY, 'na');
+    var User = require('../models/user.js');
 
-var User = require('../models/user.js');
+    mongoose.connect('mongodb://localhost/leagueQuest');
 
-mongoose.connect('mongodb://localhost/leagueQuest');
-lolapi.init(process.env.LEAGUEKEY, 'na');
-
+    var options = {
+       useRedis: true,
+       hostname: '127.0.0.1',
+       port: 6379,
+       cacheTTL: 7200
+    };
 router.post('/login', function(req, res) {
    var password = req.query.password;
    var email = req.query.email;
@@ -46,20 +51,18 @@ router.post('/signup', function(req, res){
    var password = req.query.password;
    summonerName = summonerName.replace(/ /g, '').toLowerCase();
    console.log(summonerName);
-   lolapi.Summoner.getByName(summonerName, region)
-      .then(function(summoner) {
-         //console.log(summoner);
-         console.log(summoner[summonerName].id);
-         var u = new User({ summonerName: summonerName, region: region, email: email, password: password, summonerId: summoner[summonerName].id});
-         //console.log(u);
-         u.save();
-         req.login(u, function (err) {
-            if(err) {
-               console.log(err);
-            }
-            return res.send(req.user.password);
-         });
+   lolapi.Summoner.getByName(summonerName, options, function(err, summoner) {
+      console.log(summoner[summonerName].id);
+      var u = new User({ summonerName: summonerName, region: region, email: email, password: password, summonerId: summoner[summonerName].id});
+      //console.log(u);
+      u.save();
+      req.login(u, function (err) {
+         if(err) {
+            console.log(err);
+         }
+         return res.send(req.user.password);
       });
+   });
 });
 router.post('/logout', function(req, res) {
    req.logout();

@@ -24,9 +24,11 @@ Polymer({
   },
   loginResponse: function(r) {
     if (r.detail.isAuthenticated) {
+      localStorage.setItem('isAuthenticated', true);
       console.log('Logged in');
       document.querySelector('app-router').go('/user/home');
     } else {
+      localStorage.setItem('isAuthenticated', false);
       this.$.loginMessage.text = r.detail.message;
       this.$.loginMessage.show();
     }

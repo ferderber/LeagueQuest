@@ -32,7 +32,7 @@ Polymer({
   },
   logout: function() {
     this.$.logoutAjax.generateRequest();
-
+    localStorage.clear();
   },
   logoutResponse: function(r) {
     console.log(r);

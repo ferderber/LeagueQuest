@@ -1,0 +1,58 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link 
+<dom-module is="lq-ajax">
+  <template>
+    <iron-ajax id="ironAjax" url="{{url}}" method="post" on-response="handleResponse" handle-as="json"></iron-ajax>
+  </template>
+</dom-module>
+
+<script>
+Polymer({
+  is: "lq-ajax",
+  properties: {
+    url: String,
+    cache: String
+  },
+  generateRequest: function() {
+    var isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
+    console.log(isAuthenticated);
+    if(isAuthenticated != null && isAuthenticated === true) {
+      if(this.cache != null) {
+        var cachedItem = JSON.parse(localStorage.getItem(this.cache));
+        if(cachedItem == null || isExpired(cachedItem))
+          this.$.ironAjax.generateRequest();
+        else
+          this.fire('response', cachedItem);
+
+        console.log('sent item');
+      }
+    } else {
+      document.querySelector('app-router').go('home');
+    }
+  },
+  handleResponse: function(r) {
+    var parsedResponse = r.detail.response;
+    r.stopPropagation();
+    r.preventDefault();
+    this.fire('response', parsedResponse);
+  }
+});
+
+
+function isExpired(obj) {
+  if(obj != null){
+    var objDate = new Date(obj.date);
+    var thirtyMinutesAgo = new Date(new Date() - 30 * 60000);
+    console.log(objDate);
+    console.log(thirtyMinutesAgo);
+    if(objDate <= thirtyMinutesAgo) {
+      console.log('expired');
+      return true;
+    }
+    console.log('not expired');
+  }
+  return false;
+}
+</script>
+

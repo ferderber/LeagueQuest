@@ -27,10 +27,10 @@
 Polymer({
   is: 'lq-signup',
   ready: function() {
-    
   },
   signupResponse: function (r) {
-    console.log(r);
+    document.querySelector('app-router').go('/user/home');
+    localStorage.setItem('isAuthenticated', true);
   },
 });
 function submitSignup() {

@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="lq-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
@@ -33,32 +33,11 @@
         <paper-radio-button name="unranked" label="Unranked">Unranked</paper-radio-button>
       </paper-radio-group>
     </paper-material>
-    <iron-ajax id="summonerAjax" 
-               url="/api/getSummoner"
-               method="post"
-               handle-as="json"
-               on-response="handleSummonerResponse">
-    </iron-ajax>
-    <iron-ajax id="summaryAjax"
-               url="/api/getPlayerSummary"
-               method="post"
-               handle-as="json"
-               on-response="handleSummaryResponse">
-    </iron-ajax>
-    <iron-localstorage
-               name="matchHistoryStorage"
-               value="matchHistory">
-
-    </iron-localstorage>
-    <iron-localstorage
-               name="summonerStorage"
-               value="{{summoner}}">
-    </iron-localstorage>
-
-    <iron-localstorage
-               name="summonerStorage"
-               value="{{summoner}}">
-    </iron-localstorage>
+    <lq-ajax id="summonerAjax" url="/api/getSummoner" cache="summonerStorage" on-response="handleSummonerResponse"></lq-ajax>
+    <lq-ajax id="summaryAjax" url="/api/getPlayerSummary" cache="summaryStorage" on-response="handleSummaryResponse"></lq-ajax>
+    <iron-localstorage name="matchHistoryStorage" value="matchHistory"></iron-localstorage>
+    <iron-localstorage name="summaryStorage" value="{{summary}}"></iron-localstorage>
+    <iron-localstorage name="summonerStorage" value="{{summoner}}"></iron-localstorage>
   </template>
 </dom-module>
 
@@ -78,6 +57,9 @@ Polymer({
       type: Object,
       notify: true
     },
+    summary: {
+      type: Object
+    },
     rankedSummary: {
       type: Object,
       notify: true
@@ -93,44 +75,39 @@ Polymer({
     return "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
   },
   ready: function() {
+    console.log(this.$.summonerAjax);
+    //if(typeof summoner === "undefined" || isExpired(this.summoner))
     this.$.summonerAjax.generateRequest();
+    //if(typeof summary === "undefined" || isExpired(this.summary))
+    this.$.summaryAjax.generateRequest();
   },
   handleResponse: function(r) {
     console.log(r.detail.response);
   },
   rankedSelectorChanged: function(r) {
     console.log(r.srcElement.selected);
-
   },
   handleSummaryResponse: function(r) {
-    if(isAuthenticated(r)){
-      var summary = r.detail.response;
-      console.log(summary);
-      for(var i = 0; i < summary.length; i++) {
-        if(summary[i].playerStatSummaryType === 'Unranked') {
-          console.log(summary[i].aggregatedStats);
-          this.unrankedSummary = summary[i];
-        }
-        else if (summary[i].playerStatSummaryType === 'RankedSolo5x5') {
-          console.log(summary[i].aggregatedStats);
-          this.rankedSummary = summary[i];
-        }
+    var summary = r.detail;
+    for(var i = 0; i < summary.playerStatSummaries.length; i++) {
+      if(summary.playerStatSummaries[i].playerStatSummaryType === 'Unranked') {
+        console.log(summary.playerStatSummaries[i].aggregatedStats);
+        this.unrankedSummary = summary.playerStatSummaries[i];
+      }
+      else if (summary.playerStatSummaries[i].playerStatSummaryType === 'RankedSolo5x5') {
+        console.log(summary.playerStatSummaries[i].aggregatedStats);
+        this.rankedSummary = summary.playerStatSummaries[i];
       }
     }
+    this.summary = summary;
   },
   handleSummonerResponse: function(r) {
-    if(isAuthenticated(r)) {
-      var summoner = r.detail.response;
-      summoner = summoner[Object.keys(summoner)[0]];
-      console.log(summoner);
-      this.summoner = summoner;
-      this.$.summaryAjax.generateRequest();
-    }
+    var summoner = r.detail;
+    console.log(summoner);
+    this.summoner = summoner;
   },
   handleMatchHistoryResponse: function(r) {
-    if(isAuthenticated(r)) {
-      console.log(r.detail.response);
-    }
+    console.log(r.detail.response);
   },
 });
 </script>
