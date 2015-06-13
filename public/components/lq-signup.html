@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="region-selector.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="stylesheet" href="css/lq-signup.css">
 <dom-module id="lq-signup">
   <template>
@@ -21,6 +22,7 @@
         <paper-button raised onclick="submitSignup()">Signup</paper-button>
       </paper-material>
     </form>
+    <iron-localstorage name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
   </template>
 </dom-module>
 <script>
@@ -28,9 +30,12 @@ Polymer({
   is: 'lq-signup',
   ready: function() {
   },
+  properties: {
+    isAuthenticated: Boolean
+  },
   signupResponse: function (r) {
+    this.isAuthenticated = true;
     document.querySelector('app-router').go('/user/home');
-    localStorage.setItem('isAuthenticated', true);
   },
 });
 function submitSignup() {

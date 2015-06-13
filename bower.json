@@ -28,6 +28,7 @@
     "paper-radio-group": "PolymerElements/paper-radio-group#~1.0.1",
     "app-router": "~2.6.1",
     "pushstate-anchor": "~0.3.0",
-    "iron-localstorage": "PolymerElements/iron-localstorage#~1.0.0"
+    "iron-localstorage": "PolymerElements/iron-localstorage#~1.0.0",
+    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.2"
   }
 }

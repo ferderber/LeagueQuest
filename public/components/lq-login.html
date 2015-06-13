@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="stylesheet" href="css/lq-login.css">
 <dom-module id="lq-login">
   <template>
@@ -14,21 +15,25 @@
       <paper-button raised onclick="submitLogin()">Login</paper-button>
     </form>
     <paper-toast id="loginMessage" text="Invalid login" duration="5000"></paper-toast>
+    <iron-localstorage name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
   </template>
 </dom-module>
 
 <script>
 Polymer({
   is: 'lq-login',
+  properties: {
+    isAuthenticated: Boolean
+  },
   ready: function(){
   },
   loginResponse: function(r) {
     if (r.detail.isAuthenticated) {
-      localStorage.setItem('isAuthenticated', true);
+      this.isAuthenticated = true;
       console.log('Logged in');
       document.querySelector('app-router').go('/user/home');
     } else {
-      localStorage.setItem('isAuthenticated', false);
+      this.isAuthenticated = false;
       this.$.loginMessage.text = r.detail.message;
       this.$.loginMessage.show();
     }

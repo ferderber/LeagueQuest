@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --watch routes --watch models index.js"
+    "start": "nodemon --watch routes --watch models index.js",
+    "browsersync": "browser-sync start --proxy localhost:3000 --files \"public/*.html, public/components/*.html, public/components/css/*.css\""
   },
   "repository": {
     "type": "git",

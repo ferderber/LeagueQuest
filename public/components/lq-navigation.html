@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../bower_components/pushstate-anchor/pushstate-anchor.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <style>
 nav {
   padding: 20px;
@@ -11,31 +12,44 @@ nav {
   <template>
     <nav>
       <a is="pushstate-anchor" href="/#/home"><img src="../images/insertlogohere.png" width="32px" height="32px"></a>
-      <a is="pushstate-anchor" href="/#/user/home">Home</a> 
-      <a is="pushstate-anchor" href="/#/Login">Login</a> 
-      <a is="pushstate-anchor" href="/#/Signup">Signup</a> 
-      <a is="pushstate-anchor" on-click="logout" href="/#/home">Logout</a> 
+      <a is="pushstate-anchor" href="/#/user/home" hidden="{{!isAuthenticated}}">Home</a>
+      <a is="pushstate-anchor" href="/#/Login" hidden="{{isAuthenticated}}">Login</a>
+      <a is="pushstate-anchor" href="/#/Signup" hidden="{{isAuthenticated}}">Signup</a>
+      <a is="pushstate-anchor" on-click="logout" hidden="{{!isAuthenticated}}" href="/#/home">Logout</a> 
     </nav>
     <iron-ajax id="logoutAjax"
                url="/auth/logout"
                method="post"
                on-response="logoutResponse">
     </iron-ajax>
+    <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
   </template>
 </dom-module>
 
 <script>
 Polymer({
   is: 'lq-navigation',
+  properties: {
+    isAuthenticated: {
+      type: Boolean,
+      notify: true
+    }
+  },
+  listeners: {
+  },
   ready: function(){
-
+    window.addEventListener('popstate', urlChange.bind(this));
   },
   logout: function() {
     this.$.logoutAjax.generateRequest();
     localStorage.clear();
   },
   logoutResponse: function(r) {
+    this.isAuthenticated = false;
     console.log(r);
   }
 });
+function urlChange () {
+  this.$.authStorage.reload();
+}
 </script>
