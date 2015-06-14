@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<dom-module id="lq-settings">
+  <link rel="stylesheet" href="css/lq-settings.css">
+  <template>
+    <paper-material class="content" elevation="3">
+      <div class="logout">
+        <paper-button name="Logout" raised>Logout</paper-button>
+      </div>
+      <div class="list">
+        <h4>Test thing thing</h4>
+        <paper-material class="settings-group" elevation="2">
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button><span>Item 1</span> 
+          </paper-item>
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button><span>Item 2</span> 
+          </paper-item>
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button><span>Item 3</span> 
+          </paper-item>
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button><span>Item 4</span> 
+          </paper-item>
+        </paper-material>
+      </div>
+    </paper-material>
+  </template>
+</dom-module>
+<script>
+Polymer({
+  is: 'lq-settings'
+
+});
+</script>
