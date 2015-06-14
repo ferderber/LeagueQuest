@@ -19,6 +19,7 @@ function getDate() {
 function isAuthenticated(req, res, next) {
    if(req.user)
       return next();
+   console.log('not auth');
    res.send({ isAuthenticated: false, redirectUrl: '/home'});
 }
 router.post('/getSummoner', isAuthenticated,  function(req, res) {

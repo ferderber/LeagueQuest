@@ -16,6 +16,7 @@ var router = require('express').Router(),
 router.post('/login', function(req, res) {
    var password = req.query.password;
    var email = req.query.email;
+   console.log(password, email);
    User.findOne({'email': email}, function(err, u){
       if(err) {
          console.log(err);
@@ -39,9 +40,11 @@ router.post('/login', function(req, res) {
                });
             }
          });
-      else
+      else {
+         console.log('not auth');
          return res.send({isAuthenticated: false, message: 'The login details were incorrect'});
-   });
+      }
+      });
 });
 
 router.post('/signup', function(req, res){

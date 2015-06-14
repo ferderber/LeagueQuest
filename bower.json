@@ -29,6 +29,9 @@
     "app-router": "~2.6.1",
     "pushstate-anchor": "~0.3.0",
     "iron-localstorage": "PolymerElements/iron-localstorage#~1.0.0",
-    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.2"
+    "paper-header-panel": "PolymerElements/paper-header-panel#~1.0.2",
+    "paper-tabs": "PolymerElements/paper-tabs#~1.0.0",
+    "paper-styles": "PolymerElements/paper-styles#~1.0.4",
+    "paper-progress": "PolymerElements/paper-progress#~1.0.0"
   }
 }

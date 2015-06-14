@@ -16,7 +16,6 @@ Polymer({
   },
   generateRequest: function() {
     var isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
-    console.log(isAuthenticated);
     if(isAuthenticated != null && isAuthenticated === true) {
       if(this.cache != null) {
         var cachedItem = JSON.parse(localStorage.getItem(this.cache));
@@ -25,7 +24,6 @@ Polymer({
         else
           this.fire('response', cachedItem);
 
-        console.log('sent item');
       }
     } else {
       document.querySelector('app-router').go('home');
@@ -44,13 +42,9 @@ function isExpired(obj) {
   if(obj != null){
     var objDate = new Date(obj.date);
     var thirtyMinutesAgo = new Date(new Date() - 30 * 60000);
-    console.log(objDate);
-    console.log(thirtyMinutesAgo);
     if(objDate <= thirtyMinutesAgo) {
-      console.log('expired');
       return true;
     }
-    console.log('not expired');
   }
   return false;
 }
