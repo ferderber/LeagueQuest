@@ -12,64 +12,72 @@
     <nav>
       <paper-tabs id="tabNavigation" selected="0" noink>
         <paper-tab link>
-          <a is="pushstate-anchor" href="/#/home" class="logo horizontal center-center layout"><h1>LQ</h1><!--<img src="../images/templogo.png" width="128px" height="48px">--></a>
+          <a is="pushstate-anchor" href="/#/home" class="logo horizontal center-center layout">
+            <h1>LQ</h1>
+            <!--<img src="../images/templogo.png" width="128px" height="48px">-->
+          </a>
         </paper-tab>
         <paper-tab link hidden="{{!isAuthenticated}}">
-          <a is="pushstate-anchor" href="/#/user/home" class="horizontal center-center layout"><h3>Home</h3></a>
+          <a is="pushstate-anchor" href="/#/user/home" class="horizontal center-center layout">
+            <h3>Home</h3>
+          </a>
         </paper-tab>
         <paper-tab link hidden="{{isAuthenticated}}">
-          <a is="pushstate-anchor" href="/#/Login" class="horizontal center-center layout"><h3>Login</h3></a>
+          <a is="pushstate-anchor" href="/#/Login" class="horizontal center-center layout">
+            <h3>Login</h3>
+          </a>
         </paper-tab>
         <paper-tab link hidden="{{isAuthenticated}}">
-          <a is="pushstate-anchor" href="/#/Signup" class="horizontal center-center layout"><h3>Signup</h3></a>
+          <a is="pushstate-anchor" href="/#/Signup" class="horizontal center-center layout">
+            <h3>Signup</h3>
+          </a>
         </paper-tab>
         <paper-tab link hidden="{{!isAuthenticated}}">
-          <a is="pushstate-anchor" href="/#/settings" class="horizontal center-center layout"><iron-icon icon="settings"></iron-icon></a>
+          <a is="pushstate-anchor" href="/#/settings" class="horizontal center-center layout">
+            <iron-icon icon="settings"></iron-icon>
+          </a>
         </paper-tab>
       </paper-tabs>
     </nav>
-    <iron-ajax id="logoutAjax"
-               url="/auth/logout"
-               method="post"
-               on-response="logoutResponse">
+    <iron-ajax id="logoutAjax" url="/auth/logout" method="post" on-response="logoutResponse">
     </iron-ajax>
     <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
   </template>
 </dom-module>
 
 <script>
-Polymer({
-  is: 'lq-navigation',
-  properties: {
-    isAuthenticated: {
-      type: Boolean,
-      notify: true
-    }
-  },
-  listeners: {
-  },
-  ready: function(){
-    var urls = ['/#/home', '/#/user/home', '/#/Login', '/#/Signup', '/#/settings'];
-    console.log(window.location.href);
-    for(var i = 0; i < urls.length; i++) {
-      if(window.location.href.indexOf(urls[i]) !== -1) {
-        this.$.tabNavigation.selected = i;
-        console.log(urls[i]);
+  Polymer({
+    is: 'lq-navigation',
+    properties: {
+      isAuthenticated: {
+        type: Boolean,
+        notify: true
       }
+    },
+    listeners: {},
+    ready: function() {
+      var urls = ['/#/home', '/#/user/home', '/#/Login', '/#/Signup', '/#/settings'];
+      console.log(window.location.href);
+      for (var i = 0; i < urls.length; i++) {
+        if (window.location.href.indexOf(urls[i]) !== -1) {
+          this.$.tabNavigation.selected = i;
+          console.log(urls[i]);
+        }
+      }
+      window.addEventListener('popstate', urlChange.bind(this));
+    },
+    logout: function() {
+      this.$.logoutAjax.generateRequest();
+      localStorage.clear();
+    },
+    logoutResponse: function(r) {
+      this.isAuthenticated = false;
+      console.log(r);
+      this.$.tabNavigation.selected = 0;
     }
-    window.addEventListener('popstate', urlChange.bind(this));
-  },
-  logout: function() {
-    this.$.logoutAjax.generateRequest();
-    localStorage.clear();
-  },
-  logoutResponse: function(r) {
-    this.isAuthenticated = false;
-    console.log(r);
-    this.$.tabNavigation.selected = 0;
+  });
+
+  function urlChange() {
+    this.$.authStorage.reload();
   }
-});
-function urlChange () {
-  this.$.authStorage.reload();
-}
 </script>

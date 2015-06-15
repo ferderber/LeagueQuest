@@ -25,25 +25,26 @@
 </dom-module>
 
 <script>
-Polymer({
-  is: 'lq-login',
-  properties: {
-    isAuthenticated: Boolean
-  },
-  loginResponse: function(r) {
-    if (r.detail.isAuthenticated) {
-      this.isAuthenticated = true;
-      console.log('Logged in');
-      document.querySelector('app-router').go('/user/home');
-    } else {
-      this.isAuthenticated = false;
-      this.$.loginMessage.text = r.detail.message;
-      this.$.loginMessage.show();
+  Polymer({
+    is: 'lq-login',
+    properties: {
+      isAuthenticated: Boolean
+    },
+    loginResponse: function(r) {
+      if (r.detail.isAuthenticated) {
+        this.isAuthenticated = true;
+        console.log('Logged in');
+        document.querySelector('app-router').go('/user/home');
+      } else {
+        this.isAuthenticated = false;
+        this.$.loginMessage.text = r.detail.message;
+        this.$.loginMessage.show();
+      }
     }
+  });
+
+  function submitLogin() {
+    var form = document.querySelector('#login');
+    form.submit();
   }
-});
-function submitLogin(){
-  var form = document.querySelector('#login');
-  form.submit();
-}
 </script>

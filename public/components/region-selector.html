@@ -14,15 +14,14 @@
   </template>
 </dom-module>
 <script>
-Polymer({
-  is: 'region-selector',
-  properties: {
-    region: String
-  },
-  ready: function() {
-  },
-  selectedChanged: function(e){
-    this.region = e.srcElement.selected;
-  }
-});
+  Polymer({
+    is: 'region-selector',
+    properties: {
+      region: String
+    },
+    ready: function() {},
+    selectedChanged: function(e) {
+      this.region = e.srcElement.selected;
+    }
+  });
 </script>

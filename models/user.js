@@ -19,7 +19,7 @@ userSchema.pre('save', function(cb) {
    }
    // generate a salt
    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-      if (err) { 
+      if (err) {
          return cb(err);
       }
       // hash the password using our new salt
@@ -44,7 +44,7 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
    });
 };
 userSchema.set('toJSON', {
-   transform: 
+   transform:
       function (doc, ret, options) {
          delete ret.password;
          return ret;

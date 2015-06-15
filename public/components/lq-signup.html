@@ -26,22 +26,22 @@
   </template>
 </dom-module>
 <script>
-Polymer({
-  is: 'lq-signup',
-  ready: function() {
-  },
-  properties: {
-    isAuthenticated: Boolean
-  },
-  signupResponse: function (r) {
-    this.isAuthenticated = true;
-    document.querySelector('app-router').go('/user/home');
-  },
-});
-function submitSignup() {
-  var form = document.querySelector('#signup');
-  var thing = form.serialize();
-  console.log(thing);
-  form.submit();
-}
+  Polymer({
+    is: 'lq-signup',
+    ready: function() {},
+    properties: {
+      isAuthenticated: Boolean
+    },
+    signupResponse: function(r) {
+      this.isAuthenticated = true;
+      document.querySelector('app-router').go('/user/home');
+    },
+  });
+
+  function submitSignup() {
+    var form = document.querySelector('#signup');
+    var thing = form.serialize();
+    console.log(thing);
+    form.submit();
+  }
 </script>

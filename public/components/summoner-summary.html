@@ -15,17 +15,21 @@
     <template is="dom-if" if="{{contentLoaded}}">
       <paper-material id="container" elevation="2">
         <div id="summonerPanel">
-          <img id="profileIcon" src="{{summonerUrl}}" width="64px" height="64px"/>
+          <img id="profileIcon" src="{{summonerUrl}}" width="64px" height="64px" />
           <div id="profileData">
-            <div>Level <span>{{summoner.summonerLevel}}</span></div>
+            <div>Level
+              <span>{{summoner.summonerLevel}}</span>
+            </div>
             <div id="summonerName">{{summoner.name}}</div>
           </div>
           <paper-material id="summonerStats" elevation="1">
             <div>
-              Wins: <span>{{rankedSummary.wins}}</span>
+              Wins:
+              <span>{{rankedSummary.wins}}</span>
             </div>
             <div>
-              Loses: <span>{{rankedSummary.losses}}</span>
+              Loses:
+              <span>{{rankedSummary.losses}}</span>
             </div>
           </paper-material>
         </div>
@@ -49,72 +53,71 @@
 </dom-module>
 
 <script>
-Polymer({
-  is: 'summoner-summary',
-  properties: {
-    summoner: {
-      type: Object,
-      notify: true
-    },
-    matchHistory: {
-      type: Object,
-      notify: true
-    },
-    unrankedSummary: {
-      type: Object,
-      notify: true
-    },
-    summary: {
-      type: Object
-    },
-    rankedSummary: {
-      type: Object,
-      notify: true
-    },
-    summonerUrl: {
-      type: String,
-      readonly: false,
-      notify: true,
-      computed: 'computeSummonerUrl(summoner.profileIconId)'
-    },
-    contentLoaded: {
-      type: Boolean,
-      notify: true
-    }
-  },
-  computeSummonerUrl: function(key) {
-    return "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
-  },
-  ready: function() {
-    this.contentLoaded = false;
-    this.$.summonerAjax.generateRequest();
-    this.$.summaryAjax.generateRequest();
-  },
-  rankedSelectorChanged: function(r) {
-    console.log(r.srcElement.selected);
-  },
-  handleSummaryResponse: function(r) {
-    var summary = r.detail;
-    console.log(summary);
-    for(var i = 0; i < summary.playerStatSummaries.length; i++) {
-      if(summary.playerStatSummaries[i].playerStatSummaryType === 'Unranked') {
-        this.unrankedSummary = summary.playerStatSummaries[i];
+  Polymer({
+    is: 'summoner-summary',
+    properties: {
+      summoner: {
+        type: Object,
+        notify: true
+      },
+      matchHistory: {
+        type: Object,
+        notify: true
+      },
+      unrankedSummary: {
+        type: Object,
+        notify: true
+      },
+      summary: {
+        type: Object
+      },
+      rankedSummary: {
+        type: Object,
+        notify: true
+      },
+      summonerUrl: {
+        type: String,
+        readonly: false,
+        notify: true,
+        computed: 'computeSummonerUrl(summoner.profileIconId)'
+      },
+      contentLoaded: {
+        type: Boolean,
+        notify: true
       }
-      else if (summary.playerStatSummaries[i].playerStatSummaryType === 'RankedSolo5x5') {
-        this.rankedSummary = summary.playerStatSummaries[i];
+    },
+    computeSummonerUrl: function(key) {
+      return "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
+    },
+    ready: function() {
+      this.contentLoaded = false;
+      this.$.summonerAjax.generateRequest();
+      this.$.summaryAjax.generateRequest();
+    },
+    rankedSelectorChanged: function(r) {
+      console.log(r.srcElement.selected);
+    },
+    handleSummaryResponse: function(r) {
+      var summary = r.detail;
+      console.log(summary);
+      for (var i = 0; i < summary.playerStatSummaries.length; i++) {
+        if (summary.playerStatSummaries[i].playerStatSummaryType === 'Unranked') {
+          this.unrankedSummary = summary.playerStatSummaries[i];
+        } else if (summary.playerStatSummaries[i].playerStatSummaryType === 'RankedSolo5x5') {
+          this.rankedSummary = summary.playerStatSummaries[i];
+        }
       }
-    }
-    this.summary = summary;
-  },
-  handleSummonerResponse: function(r) {
-    var summoner = r.detail;
-    this.summoner = summoner;
-    this.contentLoaded = true;
-    this.$.rankedSelector.focus();
-    this.$.rankedSelector.blur();
-  },
-  handleMatchHistoryResponse: function(r) {
-    console.log(r.detail.response);
-  },
-});
+      this.summary = summary;
+    },
+    handleSummonerResponse: function(r) {
+      var summoner = r.detail;
+      this.summoner = summoner;
+      this.contentLoaded = true;
+      this.$.rankedSelector.focus();
+      this.$.rankedSelector.blur();
+    },
+    handleMatchHistoryResponse: function(r) {
+      console.log(r.detail.response);
+    },
+  });
 </script>
