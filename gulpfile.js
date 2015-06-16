@@ -10,7 +10,7 @@ var gulp = require('gulp'),
   browserSync = require('browser-sync'),
   nodemon = require('gulp-nodemon');
 
-gulp.task('start', ['scripts'], function() {
+gulp.task('start', function() {
   nodemon({
     script: 'index.js',
     ext: 'js'
