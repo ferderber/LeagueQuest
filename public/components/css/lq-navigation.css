@@ -19,3 +19,6 @@ a {
     color: #fff;
     text-decoration: none;
 }
+a.disabled {
+    pointer-events: none;
+}

@@ -2,31 +2,31 @@
 <html>
 
 <head>
-  <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
-  <link rel="import" href="bower_components/app-router/app-router.html">
-  <link rel="import" href="components/lq-navigation.html">
-  <link rel="stylesheet" href="css/main.css">
-  <script>
-    function isAuthenticated(r) {
-      console.log(r.detail.response.isAuthenticated);
-      if (r.detail.response.isAuthenticated == false) {
-        document.querySelector('app-router').go('/home');
-        return false;
-      }
-      return true;
-    }
-  </script>
+    <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="bower_components/app-router/app-router.html">
+    <link rel="import" href="components/lq-navigation.html">
+    <link rel="stylesheet" href="css/main.css">
+    <script>
+        function isAuthenticated(r) {
+            console.log(r.detail.response.isAuthenticated);
+            if (r.detail.response.isAuthenticated == false) {
+                document.querySelector('app-router').go('/home');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 
 <body>
-  <lq-navigation></lq-navigation>
-  <app-router>
-    <app-route path="/home" import="/components/lq-home.html"></app-route>
-    <app-route path="/Signup" import="/components/lq-signup.html"></app-route>
-    <app-route path="/Login" import="/components/lq-login.html"></app-route>
-    <app-route path="/user/home" import="/components/summoner-summary.html"></app-route>
-    <app-route path="/settings" import="/components/lq-settings.html"></app-route>
-  </app-router>
+    <lq-navigation></lq-navigation>
+    <app-router>
+        <app-route path="/home" import="/components/lq-home.html"></app-route>
+        <app-route path="/Signup" import="/components/lq-signup.html"></app-route>
+        <app-route path="/Login" import="/components/lq-login.html"></app-route>
+        <app-route path="/user/home" import="/components/summoner-summary.html"></app-route>
+        <app-route path="/Settings" import="/components/lq-settings.html"></app-route>
+    </app-router>
 </body>
 
 </html>

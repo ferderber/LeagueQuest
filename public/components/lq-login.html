@@ -9,42 +9,43 @@
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 
 <dom-module id="lq-login">
-  <link rel="stylesheet" href="css/lq-login.css">
-  <template>
+    <link rel="stylesheet" href="css/lq-login.css">
+    <template>
 
-    <form is="iron-form" id="login" class="center-center" method="post" action="../auth/login" on-iron-form-response="loginResponse">
-      <paper-material>
-        <paper-input name="email" label="Email"></paper-input>
-        <paper-input name="password" label="Password" type="password"></paper-input>
-        <paper-button raised onclick="submitLogin()">Login</paper-button>
-      </paper-material>
-    </form>
-    <paper-toast id="loginMessage" text="Invalid login" duration="5000"></paper-toast>
-    <iron-localstorage name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
-  </template>
+        <form is="iron-form" id="login" class="center-center" method="post" action="../auth/login" on-iron-form-response="loginResponse">
+            <paper-material>
+                <paper-input name="email" type="email" label="Email"></paper-input>
+                <paper-input name="password" label="Password" type="password"></paper-input>
+                <paper-button raised onclick="submitLogin()">Login</paper-button>
+            </paper-material>
+        </form>
+        <paper-toast id="loginMessage" text="Invalid login" duration="5000"></paper-toast>
+        <iron-localstorage name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
+    </template>
 </dom-module>
 
 <script>
-  Polymer({
-    is: 'lq-login',
-    properties: {
-      isAuthenticated: Boolean
-    },
-    loginResponse: function(r) {
-      if (r.detail.isAuthenticated) {
-        this.isAuthenticated = true;
-        console.log('Logged in');
-        document.querySelector('app-router').go('/user/home');
-      } else {
-        this.isAuthenticated = false;
-        this.$.loginMessage.text = r.detail.message;
-        this.$.loginMessage.show();
-      }
-    }
-  });
+    Polymer({
+        is: 'lq-login',
+        properties: {
+            isAuthenticated: Boolean
+        },
+        loginResponse: function(r) {
+            if (r.detail.isAuthenticated) {
+                this.isAuthenticated = true;
+                console.log('Logged in');
+                document.querySelector('app-router').go('/user/home');
+            }
+            else {
+                this.isAuthenticated = false;
+                this.$.loginMessage.text = r.detail.message;
+                this.$.loginMessage.show();
+            }
+        }
+    });
 
-  function submitLogin() {
-    var form = document.querySelector('#login');
-    form.submit();
-  }
+    function submitLogin() {
+        var form = document.querySelector('#login');
+        form.submit();
+    }
 </script>

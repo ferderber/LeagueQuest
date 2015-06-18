@@ -1,9 +1,12 @@
 #signup {
-    width: 600px;
 }
 #signup > paper-material {
     padding-left: 30px;
     padding-right: 30px;
     padding-bottom: 30px;
     padding-top 30px;
+}
+
+paper-input {
+  width: 300px;
 }

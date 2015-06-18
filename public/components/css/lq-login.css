@@ -2,10 +2,7 @@ lq-login {
     margin-top: 30px;
 }
 #login {
-    width: 400px;
-
 }
 #login > paper-material {
     padding: 30px;
 }
-

@@ -22,10 +22,11 @@
             this.$.ironAjax.generateRequest();
           else
             this.fire('response', cachedItem);
-
+        } else {
+          this.$.ironAjax.generateRequest();
         }
       } else {
-        document.querySelector('app-router').go('home');
+        document.querySelector('app-router').go('/home');
       }
     },
     handleResponse: function(r) {

@@ -8,7 +8,9 @@ var userSchema = new Schema({
    email: String,
    password: String,
    region: String,
-   summonerId: String
+   summonerId: String,
+   verified: Boolean,
+   verificationString: String
 });
 userSchema.pre('save', function(cb) {
    var user = this;
@@ -30,13 +32,13 @@ userSchema.pre('save', function(cb) {
          }
          // override the cleartext password with the hashed one
          user.password = hash;
+
          cb();
       });
    });
 });
 
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
-   console.log(this.password);
    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
       if (err) return cb(err);
       console.log(isMatch);
