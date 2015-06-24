@@ -19,7 +19,9 @@
     properties: {
       region: String
     },
-    ready: function() {},
+    ready: function() {
+      this.region = "na";
+    },
     selectedChanged: function(e) {
       this.region = e.srcElement.selected;
     }

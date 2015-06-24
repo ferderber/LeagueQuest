@@ -89,7 +89,7 @@ router.post('/signup', function(req, res) {
             });
         }
         console.log(summoner[summonerName].id);
-        var verificationString = uuid.v4();
+        var verificationString = uuid.v4().substring(0, 23);
         var u = new User({
             summonerName: summonerName,
             region: region,

@@ -39,7 +39,6 @@
       },
       ready: function() {
         if (!this.isVerified && !this.verificationString) {
-          console.log('getstring');
           this.$.verificationStringAjax.generateRequest();
         }
       },
@@ -54,21 +53,18 @@
       verificationResponse: function(r) {
         if (r.detail.isVerified) {
           this.isVerified = r.detail.isVerified;
-          console.log('verified');
+          this.$.verificationNotification.text = 'Your account is verified';
+          this.$.verificationNotification.show();
         } else {
           this.$.verificationNotification.text = r.detail.message;
           this.$.verificationNotification.show();
-          console.log('not verified');
         }
       },
       verifyUserResponse: function(r) {},
       getVerificationStringResponse: function(r) {
-        console.log('response');
         if (typeof r.detail.verificationString !== 'undefined') {
           this.verificationString = r.detail.verificationString;
-        } else {
-          console.log('no verificationstring');
-        }
+        } else {}
       }
     });
   </script>
