@@ -9,51 +9,59 @@
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="region-selector.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
-<link rel="stylesheet" href="css/lq-signup.css">
-<dom-module id="lq-signup">
-    <template>
-        <form is="iron-form" id="signup" method="post" action="../auth/signup" on-iron-form-response="signupResponse">
-            <paper-material elevation="3">
-                <paper-input name="summonerName" label="Summoner name"></paper-input>
-                <paper-input name="email" type="email" label="Email"></paper-input>
-                <paper-input name="password" label="Password" type="password"></paper-input>
-                <h5>Select your region</h5>
-                <region-selector></region-selector>
-                <br/>
-                <paper-button raised onclick="submitSignup()">Signup</paper-button>
-            </paper-material>
-        </form>
-        <iron-localstorage name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
-        <iron-localstorage name="verificationString" value="{{verificationString}}"></iron-localstorage>
-        <paper-toast id="signupMessage" text="Invalid login" duration="5000"></paper-toast>
-    </template>
-</dom-module>
-<script>
-    Polymer({
-        is: 'lq-signup',
-        ready: function() {},
-        properties: {
-            isAuthenticated: Boolean,
-            verificationString: String
-        },
-        signupResponse: function(r) {
-            if (r.detail.isAuthenticated) {
-                this.isAuthenticated = true;
-                this.verificationString = r.detail.verificationString;
-            } else {
-                this.isAuthenticated = false;
-                this.$.signupMessage.text = r.detail.message;
-                this.$.signupMessage.show();
 
-            }
-            document.querySelector('app-router').go('/user/home');
-        },
+<link rel="stylesheet" href="css/lq-signup.css">
+
+<dom-module id="lq-signup">
+  <template>
+
+    <form is="iron-form" id="signup" method="POST" action="../auth/signup" content-type="application/json" headers='{"Accept": "application/json"}' handle-as="json" on-iron-form-response="signupResponse">
+      <paper-material elevation="3">
+        <paper-input name="summonerName" label="Summoner name"></paper-input>
+        <paper-input name="email" type="email" label="Email"></paper-input>
+        <paper-input name="password" label="Password" type="password"></paper-input>
+        <h5>Select your region</h5>
+        <region-selector></region-selector>
+        <br/>
+        <paper-button raised onclick="submitSignup()">Signup</paper-button>
+      </paper-material>
+    </form>
+    <iron-localstorage name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
+    <iron-localstorage name="verificationString" value="{{verificationString}}"></iron-localstorage>
+    <iron-localstorage name="isVerified" value="{{isVerified}}"></iron-localstorage>
+    <paper-toast id="signupMessage" text="Invalid login" duration="5000"></paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'lq-signup',
+      ready: function() {},
+      properties: {
+        isAuthenticated: Boolean,
+        isVerified: Boolean,
+        verificationString: String
+      },
+      signupResponse: function(r) {
+        if (r.detail.isAuthenticated) {
+          this.isAuthenticated = true;
+          this.isVerified = r.detail.isVerified;
+          this.verificationString = r.detail.verificationString;
+        } else {
+          this.isAuthenticated = false;
+          this.$.signupMessage.text = r.detail.message;
+          this.$.signupMessage.show();
+
+        }
+
+        document.querySelector('app-router').go('/user');
+        // MoreRouting.navigateTo('user');
+      },
     });
 
     function submitSignup() {
-        var form = document.querySelector('#signup');
-        var thing = form.serialize();
-        console.log(thing);
-        form.submit();
+      var signupForm = document.querySelector('#signup');
+      var thing = signupForm.serialize();
+      console.log(thing);
+      signupForm.submit();
     }
-</script>
+  </script>
+</dom-module>

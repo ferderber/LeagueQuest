@@ -1,100 +1,107 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/pushstate-anchor/pushstate-anchor.html">
-<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<dom-module is="lq-navigation">
 
-    <link rel="import" type="css" href="css/lq-navigation.css">
-    <template>
-        <nav>
-            <paper-tabs id="tabNavigation" selected="0" noink no-slide>
-                <paper-tab link>
-                    <a id="homeLink" is="pushstate-anchor" href="/#/home" class="logo horizontal center-center layout">
-                        <h1>LQ</h1>
-                        <!--<img src="../images/templogo.png" width="128px" height="48px">-->
-                    </a>
-                </paper-tab>
-                <paper-tab link hidden="{{!isAuthenticated}}">
-                    <a id="userHomeLink" is="pushstate-anchor" href="/#/user/home" class="horizontal center-center layout">
-                        <h3>Home</h3>
-                    </a>
-                </paper-tab>
-                <paper-tab link hidden="{{isAuthenticated}}">
-                    <a id="loginLink" is="pushstate-anchor" href="/#/Login" class="horizontal center-center layout">
-                        <h3>Login</h3>
-                    </a>
-                </paper-tab>
-                <paper-tab link hidden="{{isAuthenticated}}">
-                    <a id="signupLink" is="pushstate-anchor" href="/#/Signup" class="horizontal center-center layout">
-                        <h3>Signup</h3>
-                    </a>
-                </paper-tab>
-                <paper-tab link hidden="{{!isAuthenticated}}">
-                    <a id="settingsLink" is="pushstate-anchor" href="/#/Settings" class="horizontal center-center layout">
-                        <iron-icon icon="settings"></iron-icon>
-                    </a>
-                </paper-tab>
-            </paper-tabs>
-        </nav>
-        <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
-    </template>
+<dom-module id="lq-navigation">
+
+  <link rel="import" type="css" href="css/lq-navigation.css">
+  <template>
+    <nav>
+      <paper-tabs id="tabNavigation" selected="0" noink no-slide>
+        <paper-tab id="homeTab" link>
+          <a id="homeLink" is="pushstate-anchor" name="home" href="#/home" class="logo horizontal center-center layout">
+            <h1>LQ</h1>
+            <!--<img src="../images/templogo.png" width="128px" height="48px">-->
+          </a>
+        </paper-tab>
+        <paper-tab id="userTab" hidden="{{!isAuthenticated}}" link>
+          <a id="userLink" is="pushstate-anchor" name="user" href="#/user" class="horizontal center-center layout">
+            <h3>User</h3>
+          </a>
+        </paper-tab>
+        <paper-tab id="loginTab" hidden="{{isAuthenticated}}" link>
+          <a id="loginLink" is="pushstate-anchor" name="login" href="#/login" class="horizontal center-center layout">
+            <h3>Login</h3>
+          </a>
+        </paper-tab>
+        <paper-tab id="signupTab" hidden="{{isAuthenticated}}" link>
+          <a id="signupLink" is="pushstate-anchor" name="signup" href="#/signup" class="horizontal center-center layout">
+            <h3>Signup</h3>
+          </a>
+        </paper-tab>
+        <paper-tab id="settingsTab" hidden="{{!isAuthenticated}}" link>
+          <a id="settingsLink" is="pushstate-anchor" name="settings" href="#/settings" class="horizontal center-center layout">
+            <iron-icon icon="settings"></iron-icon>
+          </a>
+        </paper-tab>
+      </paper-tabs>
+    </nav>
+  </template>
 </dom-module>
 
 <script>
-    Polymer({
-        is: 'lq-navigation',
-        properties: {
-            isAuthenticated: {
-                type: Boolean,
-                notify: true
-            }
-        },
-        ready: function() {
-            //'/#/home', '/#/user/home', '/#/Login', '/#/Signup', '/#/Settings'];
-            console.log(window.location.href);
-            // changeNavigation();
-            // window.addEventListener('popstate', urlChange.bind(this));
-            window.addEventListener('popstate', urlChange.bind(this));
+  Polymer({
+    is: 'lq-navigation',
+    properties: {
+      isAuthenticated: {
+        type: Boolean,
+        notify: true
+      }
+    },
+    listeners: {
+      'stateChange': 'stateChangeHandler'
+    },
+    ready: function() {
+      this.isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
+    },
+    attached: function() {
+      this.changeNavigation(window.location.href.substring(window.location.href.indexOf('#') + 1));
+    },
+    stateChangeHandler: function(e) {
+      this.isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
+      if (this.isAuthenticated) {
+        this.$.settingsTab.hidden = false;
+        this.$.userTab.hidden = false;
+        this.$.homeTab.hidden = false;
+        this.$.loginTab.hidden = true;
+        this.$.signupTab.hidden = true;
+      } else {
+        this.$.settingsTab.hidden = true;
+        this.$.userTab.hidden = true;
+        this.$.homeTab.hidden = false;
+        this.$.loginTab.hidden = false;
+        this.$.signupTab.hidden = false;
+      }
+      this.changeNavigation(e.detail.path);
+    },
+    changeNavigation: function(path) {
+      console.log(path);
+      var urls = [{
+        path: '/home',
+        control: 'homeLink'
+      }, {
+        path: '/user',
+        control: 'userLink'
+      }, {
+        path: '/login',
+        control: 'loginLink'
+      }, {
+        path: '/signup',
+        control: 'signupLink',
+      }, {
+        path: '/settings',
+        control: 'settingsLink'
+      }];
+      for (var i = 0; i < urls.length; i++) {
+        if (path.toLowerCase().indexOf(urls[i].path) !== -1) {
+          document.getElementById('tabNavigation').selected = i;
+          console.log(urls[i].path);
         }
-    });
-
-    function changeNavigation() {
-        console.log('thing');
-        var urls = [{
-            page: '/#home',
-            control: 'homeLink'
-        }, {
-            page: '/#/user/home',
-            control: 'userHomeLink'
-        }, {
-            page: '/#/Login',
-            control: 'loginLink'
-        }, {
-            page: '/#/Signup',
-            control: 'signupLink',
-        }, {
-            page: '/#/Settings',
-            control: 'settingsLink'
-        }];
-        for (var i = 0; i < urls.length; i++) {
-            if (window.location.href.indexOf(urls[i].page) !== -1) {
-                document.getElementById('tabNavigation').selected = i;
-                console.log(urls[i].page);
-            }
-        }
+      }
 
     }
-
-    function urlChange() {
-        this.$.authStorage.reload();
-        // if (!this.isAuthenticated) {
-        //     //document.querySelector('app-router').go('/home');
-        // }
-        // else {
-        changeNavigation();
-        // }
-    }
+  });
 </script>

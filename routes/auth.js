@@ -1,22 +1,34 @@
 var router = require('express').Router(),
     mongoose = require('mongoose'),
-    //db = mongoose.connection,
-    //lolapi = require('leagueapi');
     uuid = require('node-uuid'),
-    lolapi = require('lolapi')(process.env.LEAGUEKEY, 'na');
-var User = require('../models/user.js');
+    config = require('../configs.js'),
+    lolapi = require('lolapi')(config.lolkey, 'na'),
+    User = require('../models/user.js');
 
-mongoose.connect('mongodb://localhost/leagueQuest');
+mongoose.connect(config.db);
 
 var options = {
     useRedis: true,
-    hostname: '127.0.0.1',
+    hostname: config.redis,
     port: 6379,
     cacheTTL: 7200
 };
+
+function isAuthenticated(req, res, next) {
+    if (req.user)
+        return next();
+    console.log('not auth');
+    res.send({
+        isAuthenticated: false,
+        redirectUrl: '/Login'
+    });
+}
 router.post('/login', function(req, res) {
-    var password = req.query.password;
-    var email = req.query.email;
+    console.log(req);
+    console.log(req.query);
+    console.log(req.body);
+    var password = req.body.password;
+    var email = req.body.email.toLowerCase();
     User.findOne({
         'email': email
     }, function(err, u) {
@@ -33,6 +45,7 @@ router.post('/login', function(req, res) {
                     console.log(err);
                 }
                 if (!isMatch) {
+                    console.log('password problem');
                     return res.send({
                         isAuthenticated: false,
                         message: 'The login details were incorrect'
@@ -43,7 +56,9 @@ router.post('/login', function(req, res) {
                             console.log(err);
                         }
                         return res.send({
-                            isAuthenticated: true
+                            isAuthenticated: true,
+                            isVerified: u.isVerified,
+                            verificationString: u.verificationString
                         });
                         //return res.send(req.user);
                     });
@@ -60,10 +75,10 @@ router.post('/login', function(req, res) {
 });
 
 router.post('/signup', function(req, res) {
-    var summonerName = req.query.summonerName;
-    var region = req.query.region;
-    var email = req.query.email;
-    var password = req.query.password;
+    var summonerName = req.body.summonerName;
+    var region = req.body.region;
+    var email = req.body.email.toLowerCase();
+    var password = req.body.password;
     summonerName = summonerName.replace(/ /g, '').toLowerCase();
     console.log(summonerName);
     lolapi.Summoner.getByName(summonerName, options, function(err, summoner) {
@@ -85,16 +100,31 @@ router.post('/signup', function(req, res) {
             verificationString: verificationString
         });
         //console.log(u);
-        u.save();
-        req.login(u, function(err) {
+        u.save(function(err) {
             if (err) {
                 console.log(err);
+                var errMsg = 'An Error occured while registering';
+                if (err.code === 11000) {
+                    errMsg = 'A user with that email already exists';
+                }
+                return res.send({
+                    isAuthenticated: false,
+                    message: errMsg
+                });
+            } else {
+                req.login(u, function(err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    return res.send({
+                        isAuthenticated: true,
+                        isVerified: false,
+                        verificationString: verificationString
+                    });
+                });
             }
-            return res.send({
-                isAuthenticated: true,
-                verificationString: verificationString
-            });
         });
+
     });
 });
 router.post('/getVerificationString', function(req, res) {
@@ -107,16 +137,32 @@ router.post('/getVerificationString', function(req, res) {
         return res.send();
     }
 });
-router.post('/verifyUser', function(req, res) {
+router.post('/verifyUser', isAuthenticated, function(req, res) {
+    console.log('verifying');
     lolapi.Summoner.getRunes(req.user.summonerId, function(error, runes) {
         if (error) throw error;
-        console.log(runes);
+        var pages = runes[req.user.summonerId].pages;
+        for (var i = 0; i < pages.length; i++) {
+            console.log(pages[i].name);
+            if (req.user.verificationString.indexOf(pages[i].name) != -1) {
+                console.log('Verified');
+                User.findOne({
+                        'email': req.user.email
+                    },
+                    function(err, u) {
+                        if (err) throw err;
+                        u.isVerified = true;
+                        u.save();
+                    });
+                return res.send({
+                    isVerified: true
+                });
+            }
+        }
         return res.send({
-            isVerified: true
+            isVerified: false,
+            message: 'No rune pages contained the verification text'
         });
-    });
-    return res.send({
-        isVerified: false
     });
 });
 router.post('/logout', function(req, res) {

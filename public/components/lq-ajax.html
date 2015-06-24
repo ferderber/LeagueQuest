@@ -1,9 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link <dom-module is="lq-ajax">
-<template>
-  <iron-ajax id="ironAjax" url="{{url}}" method="post" on-response="handleResponse" handle-as="json"></iron-ajax>
-</template>
+<dom-module is="lq-ajax">
+  <template>
+    <iron-ajax id="ironAjax" url="{{url}}" method="post" on-response="handleResponse" handle-as="json"></iron-ajax>
+  </template>
 </dom-module>
 
 <script>
@@ -26,7 +26,8 @@
           this.$.ironAjax.generateRequest();
         }
       } else {
-        document.querySelector('app-router').go('/home');
+        console.log('isAuth is false?');
+        // document.querySelector('app-router').go('/');
       }
     },
     handleResponse: function(r) {

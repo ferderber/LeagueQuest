@@ -10,120 +10,119 @@
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
 
 <dom-module id="summoner-summary">
-    <link rel="stylesheet" href="css/summoner-summary.css">
-    <template>
-        <template is="dom-if" if="{{contentLoaded}}">
-            <paper-material id="container" elevation="2">
-                <div id="summonerPanel">
-                    <img id="profileIcon" src="{{summonerUrl}}" width="64px" height="64px" />
-                    <div id="profileData">
-                        <div>Level
-                            <span>{{summoner.summonerLevel}}</span>
-                        </div>
-                        <div id="summonerName">{{summoner.name}}</div>
-                    </div>
-                    <paper-material id="summonerStats" elevation="1">
-                        <div>
-                            Wins:
-                            <span>{{rankedSummary.wins}}</span>
-                        </div>
-                        <div>
-                            Loses:
-                            <span>{{rankedSummary.losses}}</span>
-                        </div>
-                    </paper-material>
-                </div>
-            </paper-material>
-        </template>
-        <template is="dom-if" if="{{!contentLoaded}}">
-            <paper-progress indeterminate alue="800" min="100" max="1000" class="blue" value="100"></paper-progress>
-        </template>
-        <paper-material>
-            <paper-radio-group id="rankedSelector" selected="ranked" on-paper-radio-group-changed="rankedSelectorChanged">
-                <paper-radio-button id="rbRanked" name="ranked" toggles="false" label="Ranked">Ranked</paper-radio-button>
-                <paper-radio-button id="rbUnranked" name="unranked" toggles="false" label="Unranked">Unranked</paper-radio-button>
-            </paper-radio-group>
-        </paper-material>
-        <lq-ajax id="summonerAjax" url="/api/getSummoner" cache="summonerStorage" on-response="handleSummonerResponse"></lq-ajax>
-        <lq-ajax id="summaryAjax" url="/api/getPlayerSummary" cache="summaryStorage" on-response="handleSummaryResponse"></lq-ajax>
-        <iron-localstorage name="matchHistoryStorage" value="matchHistory"></iron-localstorage>
-        <iron-localstorage name="summaryStorage" value="{{summary}}"></iron-localstorage>
-        <iron-localstorage name="summonerStorage" value="{{summoner}}"></iron-localstorage>
+  <link rel="stylesheet" href="css/summoner-summary.css">
+  <template>
+
+    <template is="dom-if" if="{{contentLoaded}}">
+      <paper-material id="container" elevation="2">
+        <div id="summonerPanel">
+          <img id="profileIcon" src="{{summonerUrl}}" width="64px" height="64px" />
+          <div id="profileData">
+            <div>Level
+              <span>{{summoner.summonerLevel}}</span>
+            </div>
+            <div id="summonerName">{{summoner.name}}</div>
+          </div>
+          <paper-material id="summonerStats" elevation="1">
+            <div>
+              Wins:
+              <span>{{rankedSummary.wins}}</span>
+            </div>
+            <div>
+              Loses:
+              <span>{{rankedSummary.losses}}</span>
+            </div>
+          </paper-material>
+        </div>
+      </paper-material>
     </template>
+    <template is="dom-if" if="{{!contentLoaded}}">
+      <paper-progress indeterminate alue="800" min="100" max="1000" class="blue" value="100"></paper-progress>
+    </template>
+    <paper-material>
+      <paper-radio-group id="rankedSelector" selected="ranked" on-paper-radio-group-changed="rankedSelectorChanged">
+        <paper-radio-button id="rbRanked" name="ranked" toggles="false" label="Ranked">Ranked</paper-radio-button>
+        <paper-radio-button id="rbUnranked" name="unranked" toggles="false" label="Unranked">Unranked</paper-radio-button>
+      </paper-radio-group>
+    </paper-material>
+    <lq-ajax id="summonerAjax" url="/api/getSummoner" cache="summonerStorage" on-response="handleSummonerResponse"></lq-ajax>
+    <lq-ajax id="summaryAjax" url="/api/getPlayerSummary" cache="summaryStorage" on-response="handleSummaryResponse"></lq-ajax>
+    <iron-localstorage name="matchHistoryStorage" value="matchHistory"></iron-localstorage>
+    <iron-localstorage name="summaryStorage" value="{{summary}}"></iron-localstorage>
+    <iron-localstorage name="summonerStorage" value="{{summoner}}"></iron-localstorage>
+  </template>
 </dom-module>
-
 <script>
-    Polymer({
-        is: 'summoner-summary',
-        properties: {
-            summoner: {
-                type: Object,
-                notify: true
-            },
-            matchHistory: {
-                type: Object,
-                notify: true
-            },
-            unrankedSummary: {
-                type: Object,
-                notify: true
-            },
-            summary: {
-                type: Object
-            },
-            rankedSummary: {
-                type: Object,
-                notify: true
-            },
-            summonerUrl: {
-                type: String,
-                readonly: false,
-                notify: true,
-                computed: 'computeSummonerUrl(summoner.profileIconId)'
-            },
-            contentLoaded: {
-                type: Boolean,
-                notify: true
-            }
-        },
-        computeSummonerUrl: function(key) {
-            return "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
-        },
-        ready: function() {
-            this.contentLoaded = false;
-            this.$.summonerAjax.generateRequest();
-            this.$.summaryAjax.generateRequest();
-        },
-        rankedSelectorChanged: function(r) {
-            console.log(r.srcElement.selected);
-        },
-        handleSummaryResponse: function(r) {
-            var summary = r.detail;
-            console.log(summary);
-            for (var i = 0; i < summary.playerStatSummaries.length; i++) {
-                if (summary.playerStatSummaries[i].playerStatSummaryType ===
-                    'Unranked') {
-                    this.unrankedSummary = summary.playerStatSummaries[
-                        i];
-                }
-                else if (summary.playerStatSummaries[i].playerStatSummaryType ===
-                    'RankedSolo5x5') {
-                    this.rankedSummary = summary.playerStatSummaries[
-                        i];
-                }
-            }
-            this.summary = summary;
+  Polymer({
+    is: 'summoner-summary',
+    properties: {
+      summoner: {
+        type: Object,
+        notify: true
+      },
+      matchHistory: {
+        type: Object,
+        notify: true
+      },
+      unrankedSummary: {
+        type: Object,
+        notify: true
+      },
+      summary: {
+        type: Object
+      },
+      rankedSummary: {
+        type: Object,
+        notify: true
+      },
+      summonerUrl: {
+        type: String,
+        readonly: false,
+        notify: true,
+        computed: 'computeSummonerUrl(summoner.profileIconId)'
+      },
+      contentLoaded: {
+        type: Boolean,
+        notify: true
+      }
+    },
+    computeSummonerUrl: function(key) {
+      return "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
+    },
+    ready: function() {
+      this.contentLoaded = false;
+      this.$.summonerAjax.generateRequest();
+      this.$.summaryAjax.generateRequest();
+    },
+    rankedSelectorChanged: function(r) {
+      console.log(r.srcElement.selected);
+    },
+    handleSummaryResponse: function(r) {
+      var summary = r.detail;
+      console.log(summary);
+      for (var i = 0; i < summary.playerStatSummaries.length; i++) {
+        if (summary.playerStatSummaries[i].playerStatSummaryType ===
+          'Unranked') {
+          this.unrankedSummary = summary.playerStatSummaries[
+            i];
+        } else if (summary.playerStatSummaries[i].playerStatSummaryType ===
+          'RankedSolo5x5') {
+          this.rankedSummary = summary.playerStatSummaries[
+            i];
+        }
+      }
+      this.summary = summary;
 
-        },
-        handleSummonerResponse: function(r) {
-            var summoner = r.detail;
-            this.summoner = summoner;
-            this.contentLoaded = true;
-            this.$.rankedSelector.focus();
-            this.$.rankedSelector.blur();
-        },
-        handleMatchHistoryResponse: function(r) {
-            console.log(r.detail.response);
-        },
-    });
+    },
+    handleSummonerResponse: function(r) {
+      var summoner = r.detail;
+      this.summoner = summoner;
+      this.contentLoaded = true;
+      this.$.rankedSelector.focus();
+      this.$.rankedSelector.blur();
+    },
+    handleMatchHistoryResponse: function(r) {
+      console.log(r.detail.response);
+    },
+  });
 </script>

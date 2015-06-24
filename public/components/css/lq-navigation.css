@@ -1,24 +1,16 @@
-/**nav {
-width: 100%;
-background-color: #dfdfdf;
-}
-nav a {
-text-decoration: none;
-}
-
-nav a.logo {
-
-}**/
-
 paper-tabs {
-    background-color: var(--paper-indigo-500);
-    color: #fff;
-    --paper-tabs-selection-bar-color: var(--paper-red-400);
+  background-color: var(--paper-indigo-500);
+  color: #fff;
+  --paper-tabs-selection-bar-color: var(--paper-red-400);
 }
 a {
-    color: #fff;
-    text-decoration: none;
+  color: #fff;
+  text-decoration: none;
 }
 a.disabled {
-    pointer-events: none;
+  pointer-events: none;
+}
+.disabled {
+  display: none;
+  pointer-events: none;
 }

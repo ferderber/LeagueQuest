@@ -8,112 +8,71 @@
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="lq-verifier.html">
 <link rel="import" href="lq-ajax.html">
+
+
 <dom-module id="lq-settings">
-    <link rel="stylesheet" href="css/lq-settings.css">
-    <template>
-        <paper-material class="content" elevation="3">
-            <div class="logout">
-                <paper-button id="logout" name="Logout" on-click="logoutClick" raised>Logout</paper-button>
-            </div>
-            <template id="verifyPanel" is="dom-if" if="{{verificationString}}">
-                <paper-material class="verification-panel">
-                    <div>
-                        <span>
-                            Change the name of a rune page to:
-                        </span>
-                        <paper-input id="verifyString" class="verificationString" type="text" value="{{verificationString}}" maxlength="38" size="30" readonly on-click="textVerificationStringClick"></paper-input>
-                    </div>
-                    <paper-button id="btnVerify" on-click="btnVerifyClick" raised>Verify Rune Pages</paper-button>
-                </paper-material>
-            </template>
-            <div class="list">
-                <h4>Test thing thing</h4>
-                <paper-material class="settings-group" elevation="2">
-                    <paper-item>
-                        <paper-toggle-button></paper-toggle-button>
-                        <span>Item 1</span>
-                    </paper-item>
-                    <paper-item>
-                        <paper-toggle-button></paper-toggle-button>
-                        <span>Item 2</span>
-                    </paper-item>
-                    <paper-item>
-                        <paper-toggle-button></paper-toggle-button>
-                        <span>Item 3</span>
-                    </paper-item>
-                    <paper-item>
-                        <paper-toggle-button></paper-toggle-button>
-                        <span>Item 4</span>
-                    </paper-item>
-                </paper-material>
-            </div>
+  <link rel="stylesheet" href="css/lq-settings.css">
+  <template>
+
+    <paper-material class="content" elevation="3">
+      <div class="logout">
+        <paper-button id="logout" name="Logout" on-click="logoutClick" raised>Logout</paper-button>
+      </div>
+      <lq-verifier isVerified-changed="verificationChanged">
+      </lq-verifier>
+      <div class="list">
+        <h4>Test thing thing</h4>
+        <paper-material class="settings-group" elevation="2">
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button>
+            <span>Item 1</span>
+          </paper-item>
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button>
+            <span>Item 2</span>
+          </paper-item>
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button>
+            <span>Item 3</span>
+          </paper-item>
+          <paper-item>
+            <paper-toggle-button></paper-toggle-button>
+            <span>Item 4</span>
+          </paper-item>
         </paper-material>
-        <lq-ajax id="logoutAjax" url="/auth/logout" method="post" on-response="logoutResponse">
-        </lq-ajax>
-        <lq-ajax id="verifyAjax" url="/auth/verifyUser" cache="verificationString" method="post" on-response="verificationResponse">
-        </lq-ajax>
-        <lq-ajax id="verificationStringAjax" url="/auth/getVerificationString" method="post" on-response="getVerificationStringResponse">
-        </lq-ajax>
-        <lq-ajax id="verifyUserAjax" url="/auth/verifyUser" method="post" on-response="verifyUserResponse">
-        </lq-ajax>
-        <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
-        <iron-localstorage id="verificationStorage" name="verificationString" value="{{verificationString}}"></iron-localstorage>
-    </template>
+      </div>
+    </paper-material>
+    <lq-ajax id="logoutAjax" url="/auth/logout" method="post" on-response="logoutResponse">
+    </lq-ajax>
+    <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
+  </template>
 </dom-module>
 <script>
-    Polymer({
-        is: 'lq-settings',
-        properties: {
-            isAuthenticated: {
-                type: Boolean,
-                notify: true
-            },
-            verificationString: {
-                type: String,
-                notify: true
-            }
-        },
-        ready: function() {
-            if (this.verificationString) {}
-            else {
-                console.log('getstring');
-                this.$.verificationStringAjax.generateRequest();
-
-            }
-        },
-        logoutClick: function() {
-            this.$.logoutAjax.generateRequest();
-            localStorage.clear();
-        },
-        logoutResponse: function(r) {
-            this.isAuthenticated = false;
-            console.log(r);
-            document.querySelector('app-router').go('/Login');
-        },
-        btnVerifyClick: function() {
-            this.$.verifyAjax.generateRequest();
-        },
-        textVerificationStringClick: function() {
-            document.getElementById('verifyString').querySelector('#input').select();
-        },
-        verificationResponse: function(r) {
-            if (r.detail.isVerified) {
-                console.log('verified');
-            }
-            else {
-                console.log('not verified');
-            }
-        },
-        verifyUserResponse: function(r) {},
-        getVerificationStringResponse: function(r) {
-            console.log('response');
-            if (typeof r.detail.verificationString !== 'undefined') {
-                this.verificationString = r.detail.verificationString;
-            }
-            else {
-                console.log('no verificationstring');
-            }
-        }
-    });
+  Polymer({
+    is: 'lq-settings',
+    properties: {
+      isAuthenticated: {
+        type: Boolean,
+        notify: true
+      },
+      verificationString: {
+        type: String,
+        notify: true
+      }
+    },
+    verificationChanged: function(r) {
+      console.log(r);
+    },
+    logoutClick: function() {
+      this.$.logoutAjax.generateRequest();
+      localStorage.clear();
+    },
+    logoutResponse: function(r) {
+      this.isAuthenticated = false;
+      document.querySelector('app-router').go('/home');
+      // MoreRouting.navigateTo('home');
+    }
+  });
 </script>

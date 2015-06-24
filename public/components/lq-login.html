@@ -9,43 +9,51 @@
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 
 <dom-module id="lq-login">
-    <link rel="stylesheet" href="css/lq-login.css">
-    <template>
+  <link rel="stylesheet" href="css/lq-login.css">
+  <template>
 
-        <form is="iron-form" id="login" class="center-center" method="post" action="../auth/login" on-iron-form-response="loginResponse">
-            <paper-material>
-                <paper-input name="email" type="email" label="Email"></paper-input>
-                <paper-input name="password" label="Password" type="password"></paper-input>
-                <paper-button raised onclick="submitLogin()">Login</paper-button>
-            </paper-material>
-        </form>
-        <paper-toast id="loginMessage" text="Invalid login" duration="5000"></paper-toast>
-        <iron-localstorage name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
-    </template>
-</dom-module>
 
-<script>
+    <form is="iron-form" id="login" class="center-center" method="POST" action="../auth/login" content-type="application/json" headers='{"Accept": "application/json"}' handle-as="json" on-iron-form-response="loginResponse">
+      <paper-material>
+        <paper-input name="email" type="email" label="Email"></paper-input>
+        <paper-input name="password" label="Password" type="password"></paper-input>
+        <paper-button raised on-click="submitLogin">Login</paper-button>
+      </paper-material>
+    </form>
+    <paper-toast id="loginMessage" text="Invalid Login" duration="5000"></paper-toast>
+    <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
+    <iron-localstorage name="isVerified" value="{{isVerified}}"></iron-localstorage>
+    <iron-localstorage name="verificationString" value="{{verificationString}}"></iron-localstorage>
+  </template>
+  <script>
     Polymer({
-        is: 'lq-login',
-        properties: {
-            isAuthenticated: Boolean
+      is: 'lq-login',
+      properties: {
+        isAuthenticated: {
+          type: Boolean,
+          notify: true
         },
-        loginResponse: function(r) {
-            if (r.detail.isAuthenticated) {
-                this.isAuthenticated = true;
-                console.log('Logged in');
-                document.querySelector('app-router').go('/user/home');
-            }
-            else {
-                this.isAuthenticated = false;
-                this.$.loginMessage.text = r.detail.message;
-                this.$.loginMessage.show();
-            }
-        }
-    });
+        isVerified: Boolean,
+        verificationString: String
+      },
+      loginResponse: function(r) {
+        if (r.detail.isAuthenticated) {
+          localStorage.setItem('isAuthenticated', true);
 
-    function submitLogin() {
+          this.isVerified = r.detail.isVerified;
+          this.verificationString = r.detail.verificationString;
+          console.log('Logged in');
+          document.querySelector('app-router').go('/user');
+        } else {
+          this.isAuthenticated = false;
+          this.$.loginMessage.text = r.detail.message;
+          this.$.loginMessage.show();
+        }
+      },
+      submitLogin: function() {
         var form = document.querySelector('#login');
         form.submit();
-    }
-</script>
+      }
+    });
+  </script>
+</dom-module>

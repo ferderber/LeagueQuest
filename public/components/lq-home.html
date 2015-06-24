@@ -1,19 +1,16 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="/components/lq-ajax.html">
-<dom-module is="lq-home">
+<link rel="import" href="lq-ajax.html">
+<dom-module id="lq-home">
   <template>
-    This is a home page
+    <p>This is a home page</p>
 
-    <lq-ajax id="summonerAjax" url="/api/getSummoner" on-response="handleResponse"></lq-ajax>
   </template>
 </dom-module>
 
 <script>
   Polymer({
     is: 'lq-home',
-    ready: function() {
-      this.$.summonerAjax.generateRequest();
-    },
+    ready: function() {},
     handleResponse: function(r) {
       console.log(r);
     },

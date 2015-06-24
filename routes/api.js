@@ -1,17 +1,18 @@
 var router = require('express').Router(),
     //mongoose = require('mongoose'),
     //db = mongoose.connection,
-    //lolapi = require('leagueapi'),
     //User = require('../models/user.js'),
-    lolapi = require('lolapi')(process.env.LEAGUEKEY, 'na');
+    config = require('../configs.js'),
+    lolapi = require('lolapi')(config.lolkey, 'na');
 lolapi.setRateLimit(10, 500);
 //mongoose.connect('mongodb://localhost/leagueQuest');
 var options = {
     useRedis: true,
-    hostname: '127.0.0.1',
+    hostname: config.redis,
     port: 6379,
     cacheTTL: 7200
 };
+console.log(config.redis);
 
 function getDate() {
     var now = new Date();
@@ -24,7 +25,7 @@ function isAuthenticated(req, res, next) {
     console.log('not auth');
     res.send({
         isAuthenticated: false,
-        redirectUrl: '/home'
+        redirectUrl: '/login'
     });
 }
 router.post('/getSummoner', isAuthenticated, function(req, res) {
