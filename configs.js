@@ -13,7 +13,7 @@ switch (process.env.NODE_ENV) {
             db: process.env.MONGOLAB_URI,
             redis: process.env.REDIS_URL,
             lolkey: process.env.LEAGUEKEY,
-            port: 80
+            port: process.env.PORT
         };
         break;
     default:
