@@ -17,9 +17,14 @@
             <!--<img src="../images/templogo.png" width="128px" height="48px">-->
           </a>
         </paper-tab>
+        <paper-tab id="questTab" hidden="{{!isAuthenticated}}" link>
+          <a id="questLink" is="pushstate-anchor" name="quest" href="#/quest" class="horizontal center-center layout">
+            <h3>Quests</h3>
+          </a>
+        </paper-tab>
         <paper-tab id="userTab" hidden="{{!isAuthenticated}}" link>
           <a id="userLink" is="pushstate-anchor" name="user" href="#/user" class="horizontal center-center layout">
-            <h3>User</h3>
+            <h3>Profile</h3>
           </a>
         </paper-tab>
         <paper-tab id="loginTab" hidden="{{isAuthenticated}}" link>
@@ -65,12 +70,14 @@
       if (this.isAuthenticated) {
         this.$.settingsTab.hidden = false;
         this.$.userTab.hidden = false;
+        this.$.questTab.hidden = false;
         this.$.homeTab.hidden = false;
         this.$.loginTab.hidden = true;
         this.$.signupTab.hidden = true;
       } else {
         this.$.settingsTab.hidden = true;
         this.$.userTab.hidden = true;
+        this.$.questTab.hidden = true;
         this.$.homeTab.hidden = false;
         this.$.loginTab.hidden = false;
         this.$.signupTab.hidden = false;
@@ -82,6 +89,9 @@
       var urls = [{
         path: '/home',
         control: 'homeLink'
+      }, {
+        path: '/quest',
+        control: 'questLink'
       }, {
         path: '/user',
         control: 'userLink'

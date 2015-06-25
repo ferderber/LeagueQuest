@@ -37,6 +37,7 @@
     "paper-item": "PolymerElements/paper-item#~1.0.1",
     "paper-toggle-button": "PolymerElements/paper-toggle-button#~1.0.3",
     "iron-pages": "PolymerElements/iron-pages#~1.0.2",
-    "app-router": "~2.6.1"
+    "app-router": "~2.6.1",
+    "paper-dialog": "PolymerElements/paper-dialog#~1.0.0"
   }
 }

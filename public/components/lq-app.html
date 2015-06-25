@@ -1,21 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/pushstate-anchor/pushstate-anchor.html">
 <link rel="import" href="../bower_components/app-router/app-router.html">
 <link rel="import" href="lq-navigation.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 
 <dom-module id="lq-app">
-
-  <link rel="import" type="css" href="css/lq-navigation.css">
-  <style>
-
-  </style>
+  <link rel="stylesheet" href="css/lq-app.css">
   <template>
     <lq-navigation id="navigation"></lq-navigation>
     <app-router mode="hash" id="router">
@@ -23,6 +13,7 @@
       <app-route path="/home" import="/components/lq-home.html"></app-route>
       <app-route path="/signup" import="/components/lq-signup.html"></app-route>
       <app-route path="/login" import="/components/lq-login.html"></app-route>
+      <app-route path="/quest" import="/components/lq-quests.html"></app-route>
       <app-route path="/user" import="/components/summoner-summary.html"></app-route>
       <app-route path="/settings" import="/components/lq-settings.html"></app-route>
     </app-router>

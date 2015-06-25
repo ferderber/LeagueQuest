@@ -12,7 +12,6 @@ var options = {
     port: 6379,
     cacheTTL: 7200
 };
-console.log(config.redis);
 
 function getDate() {
     var now = new Date();
@@ -22,7 +21,6 @@ function getDate() {
 function isAuthenticated(req, res, next) {
     if (req.user)
         return next();
-    console.log('not auth');
     res.send({
         isAuthenticated: false,
         redirectUrl: '/login'

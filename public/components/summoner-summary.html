@@ -79,15 +79,15 @@
         type: String,
         readonly: false,
         notify: true,
-        computed: 'computeSummonerUrl(summoner.profileIconId)'
+        computed: '_computeSummonerUrl(summoner.profileIconId)'
       },
       contentLoaded: {
         type: Boolean,
         notify: true
       }
     },
-    computeSummonerUrl: function(key) {
-      return "http://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
+    _computeSummonerUrl: function(key) {
+      return "https://ddragon.leagueoflegends.com/cdn/5.2.1/img/profileicon/" + key + ".png";
     },
     ready: function() {
       this.contentLoaded = false;

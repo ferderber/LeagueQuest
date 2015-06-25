@@ -17,10 +17,10 @@
   Polymer({
     is: 'region-selector',
     properties: {
-      region: String
-    },
-    ready: function() {
-      this.region = "na";
+      region: {
+        type: String,
+        value: 'na'
+      }
     },
     selectedChanged: function(e) {
       this.region = e.srcElement.selected;

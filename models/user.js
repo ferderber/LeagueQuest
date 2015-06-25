@@ -33,6 +33,7 @@ var userSchema = new Schema({
     verificationString: {
         type: String
     },
+    champions : [Number],
 });
 userSchema.pre('save', function(cb) {
     var user = this;

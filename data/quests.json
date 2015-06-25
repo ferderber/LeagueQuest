@@ -1,0 +1,84 @@
+[{
+    "title": "Lux Beginner",
+    "type": 0,
+    "description": "Get 10 kills on Lux",
+    "points": 10,
+    "objectives": {
+        "kills": 10,
+        "champion": 99,
+    }
+}, {
+    "title": "Lux Intermediate",
+    "type": 0,
+    "description": "Get two triple kills on Lux",
+    "points": 20,
+    "objectives": {
+        "tripleKills": 2,
+        "champion": 99
+    }
+}, {
+    "title": "Lux Pro",
+    "type": 0,
+    "description": "Get a pentakill on Lux",
+    "points": 25,
+    "objectives": {
+        "pentakill": 1,
+        "champion": 99
+    }
+}, {
+    "title": "Support Beginner",
+    "type": 0,
+    "description": "Place 10 wards in one game",
+    "points": 10,
+    "objectives": {
+        "numGames": 1,
+        "wardsPlaced": 10
+    }
+}, {
+    "title": "Support Intermediate",
+    "type": 0,
+    "description": "Destroy 20 wards",
+    "points": 20,
+    "objectives": {
+        "wardsKilled": 20
+    }
+}, {
+    "title": "Support Pro",
+    "type": 0,
+    "description": "Destroy a total of 500 wards, place 500 wards and heal 10000hp",
+    "points": 25,
+    "objectives": {
+        "wardsKilled": 500,
+        "wardsPlaced": 500,
+        "healingDone": 10000
+    }
+}, {
+    "title": "Jungle Beginner",
+    "type": 0,
+    "description": "Take 15 jungle camps in one game",
+    "points": 10,
+    "objectives": {
+        "numGames": 1,
+        "neutralMinionsKilled": 15
+    }
+}, {
+    "title": "Jungle Intermediate",
+    "type": 0,
+    "description": "Steal 5 enemy jungle camps in one game",
+    "points": 20,
+    "objective": {
+        "numGames": 1,
+        "neutralMinionsKilledEnemyJungle": 5
+    }
+}, {
+    "title": "Jungle Pro",
+    "type": 0,
+    "description": "Steal 5 jungle camps and take a total of 25 jungle camps in one game",
+    "points": 25,
+    "objectives": {
+        "numGames": 1,
+        "neutralMinionsKilledEnemyJungle": 5,
+        "neutralMinionsKilledTeamJungle": 25
+
+    }
+}]

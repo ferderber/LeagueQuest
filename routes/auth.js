@@ -55,6 +55,12 @@ router.post('/login', function(req, res) {
                         if (err) {
                             console.log(err);
                         }
+                        if (u.isVerified) {
+                            return res.send({
+                                isAuthenticated: true,
+                                isVerified: u.isVerified
+                            });
+                        }
                         return res.send({
                             isAuthenticated: true,
                             isVerified: u.isVerified,
@@ -128,7 +134,6 @@ router.post('/signup', function(req, res) {
     });
 });
 router.post('/getVerificationString', function(req, res) {
-    console.log('thing');
     if (req.user.verificationString) {
         return res.send({
             verificationString: req.user.verificationString
@@ -138,12 +143,10 @@ router.post('/getVerificationString', function(req, res) {
     }
 });
 router.post('/verifyUser', isAuthenticated, function(req, res) {
-    console.log('verifying');
     lolapi.Summoner.getRunes(req.user.summonerId, function(error, runes) {
         if (error) throw error;
         var pages = runes[req.user.summonerId].pages;
         for (var i = 0; i < pages.length; i++) {
-            console.log(pages[i].name);
             if (req.user.verificationString.indexOf(pages[i].name) != -1) {
                 console.log('Verified');
                 User.findOne({
