@@ -33,7 +33,7 @@
       document.querySelector('#router').addEventListener('state-change', this.stateChange.bind(this));
     },
     stateChange: function(e) {
-      navigation.fire('stateChange', e.detail);
+      this.$.navigation.fire('stateChange', e.detail);
 
     },
     initAuthStorage: function() {

@@ -6,7 +6,7 @@
     <template is="dom-repeat" items="{{champions}}">
       <champion-tag champion="{{item}}"></champion-tag>
     </template>
-    <iron-ajax url="http://localhost:3000/api/getChampions" params="{}" handle-as="json" on-response="handleChampions">
+    <iron-ajax url="/api/getChampions" params="{}" handle-as="json" on-response="handleChampions">
     </iron-ajax>
   </template>
 </dom-module>

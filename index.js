@@ -12,10 +12,10 @@ var User = require('./models/user.js');
 var Quest = require('./models/quest.js');
 var favicon = require('serve-favicon');
 passport.use(new LocalStrategy(
-  function (email, password, done) {
+  function(email, password, done) {
     User.findOne({
       email: email
-    }, function (err, user) {
+    }, function(err, user) {
       if (err) {
         return done(err);
       }
@@ -34,11 +34,11 @@ passport.use(new LocalStrategy(
   }
 ));
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function(user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function (user, done) {
+passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 var auth = require('./routes/auth.js');
@@ -70,36 +70,30 @@ function addQuests() {
     "type": 0,
     "description": "Get 10 kills on Lux",
     "points": 10,
+    "champion": 99,
     "objectives": [{
       "objective": "kills",
       "value": 10
-    }, {
-      "objective": "champion",
-      "value": 99
     }]
   }, {
     "title": "Lux Intermediate",
     "type": 0,
     "description": "Get two triple kills on Lux",
     "points": 20,
+    "champion": 99,
     "objectives": [{
       "objective": "tripleKills",
       "value": 2
-    }, {
-      "objective": "champion",
-      "value": 99
     }]
   }, {
     "title": "Lux Pro",
     "type": 0,
     "description": "Get a pentakill on Lux",
     "points": 25,
+    "champion": 99,
     "objectives": [{
       "objective": "pentaKills",
       "value": 1
-    }, {
-      "objective": "champion",
-      "value": 99
     }]
   }, {
     "title": "Support Beginner",
@@ -177,13 +171,13 @@ function addQuests() {
       "value": 25
     }]
   }];
-  Quest.count({}, function (err, count) {
+  Quest.count({}, function(err, count) {
     if (count === 0)
-      Quest.remove({}, function (err) {
+      Quest.remove({}, function(err) {
         if (err) {
           throw err;
         }
-        Quest.collection.insert(quests, function (err) {
+        Quest.collection.insert(quests, function(err) {
           if (err) {
             throw err;
           } else {
@@ -195,6 +189,6 @@ function addQuests() {
 }
 
 
-app.listen(config.port, function () {
+app.listen(config.port, function() {
   console.log('listening');
 });

@@ -18,7 +18,7 @@ function isAuthenticated(req, res, next) {
   if (req.user)
     User.count({
       _id: req.user._id
-    }, function (err, count) {
+    }, function(err, count) {
       if (err)
         throw err;
       if (count > 0)
@@ -30,16 +30,16 @@ function isAuthenticated(req, res, next) {
     });
 
 }
-router.post('/getQuest', isAuthenticated, function (req, res) {
+router.post('/getQuest', isAuthenticated, function(req, res) {
   User.findOne({
     email: req.user.email
-  }, function (err, user) {
+  }, function(err, user) {
     if (err) {
       throw err;
     }
     console.log(user.quests.length);
     if (user.quests.length === 0) {
-      Quest.random(function (err, quest) {
+      Quest.random(function(err, quest) {
         var userQuest = {
           questId: quest._id,
           progress: []
@@ -52,35 +52,55 @@ router.post('/getQuest', isAuthenticated, function (req, res) {
         }
         console.log(userQuest);
         user.quests.push(userQuest);
-        user.save(function (err) {
+        user.save(function(err) {
           if (err)
             throw err;
           return res.send({
-            quest: quest,
-            progress: userQuest.progress
+            quest: mergeQuestObject(quest, userQuest)
           });
         });
 
       });
     } else {
-      Quest.findById(user.quests[0].questId, function (err, quest) {
+      Quest.findById(user.quests[0].questId, function(err, quest) {
         return res.send({
-          quest: quest,
-          progress: user.quests[0].progress
+          quest: mergeQuestObject(quest, user.quests[0])
         });
       });
     }
   });
 });
-router.post('/acceptQuest', isAuthenticated, function (req, res) {
+router.post('/acceptQuest', isAuthenticated, function(req, res) {
   return res.send({
     test: ""
   });
 });
-router.post('/checkStatus', isAuthenticated, function (req, res) {
+router.post('/checkStatus', isAuthenticated, function(req, res) {
   return res.send({
     test: ""
   });
 });
 
+function mergeQuestObject(quest, userQuest) {
+  var q = new Object();
+  q.id = quest._id;
+  q.title = quest.title;
+  q.type = quest.type;
+  q.champion = quest.champion;
+  q.description = quest.description;
+  q.points = quest.points;
+  q.objectives = [];
+  for (var i = 0; i < quest.objectives.length; i++) {
+    for (var k = 0; k < userQuest.progress.length; k++) {
+      if (userQuest.progress[k].objective === quest.objectives[i].objective) {
+        q.objectives.push({
+          objective: quest.objectives[i].objective,
+          value: quest.objectives[i].value,
+          progress: userQuest.progress[k].value
+        });
+      }
+    }
+  }
+  return q;
+}
 module.exports = router;

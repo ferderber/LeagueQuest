@@ -1,0 +1,7 @@
+.quest {
+  padding: 20px;
+  background-color: var(--paper-blue-400);
+  color: #ffffff;
+  font-size: 1.2em;
+}
+.questProp {}

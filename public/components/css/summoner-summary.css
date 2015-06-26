@@ -1,39 +1,42 @@
-#container {
-    background-color: #03A9F4;
-    color: #fff;
+.container {
+  background-color: var(--paper-blue-400);
+  color: #fff;
+  font-size: 1.2em;
 }
 #summonerPanel {
-    padding: 20px;
-    height: 64px;
+  padding: 20px;
+  height: 64px;
 }
 #profileIcon {
-    padding-right: 10px;
-    min-height: 64px;
-    min-width: 64px;
-    float: left;
+  padding-right: 10px;
+  min-height: 64px;
+  min-width: 64px;
+  float: left;
 }
 #profileData {
-    height: 100%;
-    width: 50%;
-    display: inline-block;
+  height: 100%;
+  width: 50%;
+  display: inline-block;
 }
-
 #profileData > div {
-    min-height: 50%;
+  min-height: 50%;
 }
 #summonerName {
-    vertical-align: bottom;
+  vertical-align: bottom;
 }
-#summonerStats {
-    width: 30%;
-    height: 34px;
-    max-height:64px;
-    float: right;
-    padding: 10px;
+.summonerStats {
+  width: 30%;
+  height: 34px;
+  max-height: 64px;
+  float: right;
+  padding: 10px;
+}
+.rankedBar {
+  background-color: var(--paper-blue-50);
 }
 paper-progress {
-    width: 100%;
+  width: 100%;
 }
 paper-progress > #progressContainer > #activeProgress {
-    background-color: #03a9f4;
+  background-color: #03a9f4;
 }

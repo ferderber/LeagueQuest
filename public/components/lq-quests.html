@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="lq-ajax.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
@@ -8,34 +7,18 @@
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="lq-ajax.html">
+<link rel="import" href="lq-quest.html">
 
 <dom-module id="lq-quests">
-  <link rel="stylesheet" href="css/lq-quests.css">
+  <link rel="import" type="css" href="css/lq-quests.css">
   <template>
     <template is="dom-if" if="{{contentLoaded}}">
-      <paper-material class="quest" elevation="2">
-        <div>
-          <h2>Title</h2>
-          <span>{{quests.quest.title}}</span>
-        </div>
-        <div>
-          <h2>Description:</h2>
-          <span>{{quests.quest.description}}</span>
-        </div>
-        <div>
-          <h2>Points:</h2>
-          <span>{{quests.quest.points}}</span>
-        </div>
-        <template is="dom-repeat" items="{{quests.progress}}">
-          <h4>
-            <div>
-              <span>{{item.objective}}</span>:
-              <span>{{item.value}}</span>/
-              <span>0</span>
-            </div>
-          </h4>
+      <div class="questList">
+        <template is="dom-repeat" items="{{quests}}">
+          <lq-quest quest="{{item}}"></lq-quest>
         </template>
-      </paper-material>
+      </div>
     </template>
 
     <template is="dom-if" if="{{!contentLoaded}}">
@@ -56,7 +39,7 @@
         notify: true
       },
       quests: {
-        type: Object,
+        type: Array,
         notify: true
       },
       contentLoaded: {
@@ -70,7 +53,9 @@
       // this.$.summaryAjax.generateRequest();
     },
     handleQuestResponse: function(r) {
-      this.quests = r.detail;
+      var quests = [];
+      quests.push(r.detail.quest);
+      this.quests = quests;
       console.log(this.quests);
       this.contentLoaded = true;
     },

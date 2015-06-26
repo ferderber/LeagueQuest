@@ -1,0 +1,44 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+
+<dom-module id="lq-quest">
+  <link rel="import" type="css" href="css/lq-quest.css">
+  <template>
+    <paper-material class="quest" elevation="1">
+      <div>
+        <span class="questProp">Title:</span>
+        <span>{{quest.title}}</span>
+      </div>
+      <div>
+        <span class="questProp">Description:</span>
+        <span>{{quest.description}}</span>
+      </div>
+      <div>
+        <span class="questProp">Points:</span>
+        <span>{{quest.points}}</span>
+      </div>
+      <template is="dom-repeat" items="{{quest.objectives}}" as="objective">
+        <div>
+          <span class="questProp">{{objective.objective}}</span>:
+          <span>{{objective.progress}}</span>/
+          <span>{{objective.value}}</span>
+        </div>
+      </template>
+    </paper-material>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'lq-quest',
+    properties: {
+      quest: {
+        type: Object,
+        notify: true
+      }
+    },
+    ready: function() {
+    }
+  });
+</script>

@@ -17,6 +17,11 @@ var questSchema = new Schema({
     type: Number,
     required: true
   },
+  champion: {
+    type: Number,
+    required: true,
+    default: null
+  },
   objectives: [{
       objective: String,
       value: Number
@@ -50,6 +55,4 @@ questSchema.statics.random = function(cb) {
     this.findOne().skip(rand).exec(cb);
   }.bind(this));
 };
-
-
 module.exports = mongoose.model('Quest', questSchema);

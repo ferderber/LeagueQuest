@@ -10,10 +10,10 @@
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
 
 <dom-module id="summoner-summary">
-  <link rel="stylesheet" href="css/summoner-summary.css">
+  <link rel="import" type="css" href="css/summoner-summary.css">
   <template>
     <template is="dom-if" if="{{contentLoaded}}">
-      <paper-material id="container" elevation="2">
+      <paper-material class="container" elevation="1">
         <div id="summonerPanel">
           <img id="profileIcon" src="{{summonerUrl}}" width="64px" height="64px" />
           <div id="profileData">
@@ -22,7 +22,7 @@
             </div>
             <div id="summonerName">{{summoner.name}}</div>
           </div>
-          <paper-material id="summonerStats" elevation="1">
+          <paper-material class="summonerStats" elevation="1">
             <div>
               Wins:
               <span>{{rankedSummary.wins}}</span>
@@ -38,7 +38,7 @@
     <template is="dom-if" if="{{!contentLoaded}}">
       <paper-progress indeterminate alue="800" min="100" max="1000" class="blue" value="100"></paper-progress>
     </template>
-    <paper-material>
+    <paper-material class="rankedBar" elevation="3">
       <paper-radio-group id="rankedSelector" selected="ranked" on-paper-radio-group-changed="rankedSelectorChanged">
         <paper-radio-button id="rbRanked" name="ranked" toggles="false" label="Ranked">Ranked</paper-radio-button>
         <paper-radio-button id="rbUnranked" name="unranked" toggles="false" label="Unranked">Unranked</paper-radio-button>
