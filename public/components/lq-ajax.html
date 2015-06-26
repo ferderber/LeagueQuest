@@ -34,7 +34,12 @@
       var parsedResponse = r.detail.response;
       r.stopPropagation();
       r.preventDefault();
-      this.fire('response', parsedResponse);
+      if (typeof(parsedResponse.isAuthenticated) === 'undefined')
+        this.fire('response', parsedResponse);
+      else {
+        localStorage.clear();
+        document.querySelector('app-router').go('/');
+      }
     }
   });
 

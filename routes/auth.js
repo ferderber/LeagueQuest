@@ -24,9 +24,6 @@ function isAuthenticated(req, res, next) {
     });
 }
 router.post('/login', function(req, res) {
-    console.log(req);
-    console.log(req.query);
-    console.log(req.body);
     var password = req.body.password;
     var email = req.body.email.toLowerCase();
     User.findOne({

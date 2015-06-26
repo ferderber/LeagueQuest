@@ -13,16 +13,35 @@
   <link rel="stylesheet" href="css/lq-quests.css">
   <template>
     <template is="dom-if" if="{{contentLoaded}}">
-      <paper-material id="container" elevation="2">
-
+      <paper-material class="quest" elevation="2">
+        <div>
+          <h2>Title</h2>
+          <span>{{quests.quest.title}}</span>
+        </div>
+        <div>
+          <h2>Description:</h2>
+          <span>{{quests.quest.description}}</span>
+        </div>
+        <div>
+          <h2>Points:</h2>
+          <span>{{quests.quest.points}}</span>
+        </div>
+        <template is="dom-repeat" items="{{quests.progress}}">
+          <h4>
+            <div>
+              <span>{{item.objective}}</span>:
+              <span>{{item.value}}</span>/
+              <span>0</span>
+            </div>
+          </h4>
+        </template>
       </paper-material>
     </template>
 
     <template is="dom-if" if="{{!contentLoaded}}">
-      work in progress
       <paper-progress indeterminate alue="800" min="100" max="1000" class="blue" value="100"></paper-progress>
     </template>
-    <lq-ajax id="questAjax" url="/api/getPlayerSummary" cache="questStorage" on-response="handleQuestResponse"></lq-ajax>
+    <lq-ajax id="questAjax" url="/quest/getQuest" on-response="handleQuestResponse"></lq-ajax>
     <iron-localstorage name="matchHistoryStorage" value="matchHistory"></iron-localstorage>
     <iron-localstorage name="questStorage" value="{{quests}}"></iron-localstorage>
     <iron-localstorage name="summonerStorage" value="{{summoner}}"></iron-localstorage>
@@ -47,11 +66,13 @@
     },
     ready: function() {
       this.contentLoaded = false;
-      this.$.summonerAjax.generateRequest();
-      this.$.summaryAjax.generateRequest();
+      this.$.questAjax.generateRequest();
+      // this.$.summaryAjax.generateRequest();
     },
     handleQuestResponse: function(r) {
-      this.quests = r.detail.quests;
+      this.quests = r.detail;
+      console.log(this.quests);
+      this.contentLoaded = true;
     },
     handleSummonerResponse: function(r) {
       var summoner = r.detail;
