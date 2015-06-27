@@ -45,7 +45,7 @@ var userSchema = new Schema({
   },
   champions: [Number],
   quests: [{
-    questId: {
+    details: {
       type: Schema.Types.ObjectId,
       ref: 'Quest'
     },

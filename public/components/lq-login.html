@@ -41,7 +41,8 @@
           localStorage.setItem('isAuthenticated', true);
 
           this.isVerified = r.detail.isVerified;
-          this.verificationString = r.detail.verificationString;
+          if (r.detail.verificationString)
+            this.verificationString = r.detail.verificationString;
           console.log('Logged in');
           document.querySelector('app-router').go('/user');
         } else {

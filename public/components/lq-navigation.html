@@ -12,33 +12,33 @@
     <nav>
       <paper-tabs id="tabNavigation" selected="0" noink no-slide>
         <paper-tab id="homeTab" link>
-          <a id="homeLink" is="pushstate-anchor" name="home" href="#/home" class="logo horizontal center-center layout">
+          <a id="homeLink" is="pushstate-anchor" name="home" href="#!/home" class="logo horizontal center-center layout">
             <h1>LQ</h1>
             <!--<img src="../images/templogo.png" width="128px" height="48px">-->
           </a>
         </paper-tab>
         <paper-tab id="questTab" hidden="{{!isAuthenticated}}" link>
-          <a id="questLink" is="pushstate-anchor" name="quest" href="#/quest" class="horizontal center-center layout">
+          <a id="questLink" is="pushstate-anchor" name="quest" href="#!/quest" class="horizontal center-center layout">
             <h3>Quests</h3>
           </a>
         </paper-tab>
         <paper-tab id="userTab" hidden="{{!isAuthenticated}}" link>
-          <a id="userLink" is="pushstate-anchor" name="user" href="#/user" class="horizontal center-center layout">
+          <a id="userLink" is="pushstate-anchor" name="user" href="#!/user" class="horizontal center-center layout">
             <h3>Profile</h3>
           </a>
         </paper-tab>
         <paper-tab id="loginTab" hidden="{{isAuthenticated}}" link>
-          <a id="loginLink" is="pushstate-anchor" name="login" href="#/login" class="horizontal center-center layout">
+          <a id="loginLink" is="pushstate-anchor" name="login" href="#!/login" class="horizontal center-center layout">
             <h3>Login</h3>
           </a>
         </paper-tab>
         <paper-tab id="signupTab" hidden="{{isAuthenticated}}" link>
-          <a id="signupLink" is="pushstate-anchor" name="signup" href="#/signup" class="horizontal center-center layout">
+          <a id="signupLink" is="pushstate-anchor" name="signup" href="#!/signup" class="horizontal center-center layout">
             <h3>Signup</h3>
           </a>
         </paper-tab>
         <paper-tab id="settingsTab" hidden="{{!isAuthenticated}}" link>
-          <a id="settingsLink" is="pushstate-anchor" name="settings" href="#/settings" class="horizontal center-center layout">
+          <a id="settingsLink" is="pushstate-anchor" name="settings" href="#!/settings" class="horizontal center-center layout">
             <iron-icon icon="settings"></iron-icon>
           </a>
         </paper-tab>

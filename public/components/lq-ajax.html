@@ -17,7 +17,9 @@
       var isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
       if (isAuthenticated != null && isAuthenticated === true) {
         if (this.cache != null) {
-          var cachedItem = JSON.parse(localStorage.getItem(this.cache));
+          var cachedItem = localStorage.getItem(this.cache);
+          if (cachedItem !== 'undefined')
+            cachedItem = JSON.parse(cachedItem);
           if (cachedItem == null || isExpired(cachedItem))
             this.$.ironAjax.generateRequest();
           else

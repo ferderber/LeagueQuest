@@ -12,13 +12,14 @@ var User = require('./models/user.js');
 var Quest = require('./models/quest.js');
 var favicon = require('serve-favicon');
 passport.use(new LocalStrategy(
-  function(email, password, done) {
+  function (email, password, done) {
     User.findOne({
       email: email
-    }, function(err, user) {
+    }, function (err, user) {
       if (err) {
         return done(err);
       }
+      console.log('swag');
       if (!user) {
         return done(null, false, {
           message: 'Incorrect username.'
@@ -30,16 +31,23 @@ passport.use(new LocalStrategy(
         });
       }
       return done(null, user);
-    });
+    }).populate('quest');
   }
 ));
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
-  done(null, user);
+passport.deserializeUser(function (user, done) {
+
+  User.findById(user._id).populate({
+    path: 'quests.details',
+    model: 'Quest'}).exec(function (err, u) {
+    if (err)
+      throw err;
+    done(null, u);
+  });
 });
 var auth = require('./routes/auth.js');
 var quests = require('./routes/quest.js');
@@ -171,13 +179,13 @@ function addQuests() {
       "value": 25
     }]
   }];
-  Quest.count({}, function(err, count) {
+  Quest.count({}, function (err, count) {
     if (count === 0)
-      Quest.remove({}, function(err) {
+      Quest.remove({}, function (err) {
         if (err) {
           throw err;
         }
-        Quest.collection.insert(quests, function(err) {
+        Quest.collection.insert(quests, function (err) {
           if (err) {
             throw err;
           } else {
@@ -189,6 +197,6 @@ function addQuests() {
 }
 
 
-app.listen(config.port, function() {
+app.listen(config.port, function () {
   console.log('listening');
 });

@@ -6,6 +6,7 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="lq-ajax.html">
 
 <dom-module id="lq-verifier">
@@ -14,37 +15,41 @@
       <paper-material class="verification-panel">
         <div>
           <span>Change the name of a rune page to:</span>
-          <paper-input id="verifyString" class="verificationString" type="text" value="{{verificationString}}" maxlength="38" size="30" readonly on-click="textVerificationStringClick"></paper-input>
+          <paper-input id="verifyString" class="verificationString" type="text" value="{{verificationString}}" maxlength="23" size="21" readonly on-click="textVerificationStringClick"></paper-input>
         </div>
         <paper-button id="btnVerify" on-click="btnVerifyClick" raised>Verify Rune Pages</paper-button>
       </paper-material>
     </template>
+    <iron-localstorage name="isVerified" value="{{isVerified}}" on-iron-localstorage-load="isVerifiedLoaded"></iron-localstorage>
+    <iron-localstorage name="verificationString" value="{{verificationString}}"></iron-localstorage>
     <lq-ajax id="verifyAjax" url="/auth/verifyUser" method="post" on-response="verificationResponse">
     </lq-ajax>
     <lq-ajax id="verificationStringAjax" cache="verificationString" url="/auth/getVerificationString" method="post" on-response="getVerificationStringResponse">
     </lq-ajax>
     <paper-toast id="verificationNotification"></paper-toast>
-    <iron-localstorage name="verificationString" value="{{verificationString}}"></iron-localstorage>
-    <iron-localstorage name="isVerified" value="{{isVerified}}"></iron-localstorage>
   </template>
   <script>
     Polymer({
       is: 'lq-verifier',
       properties: {
-        verificationString: String,
+        verificationString: {
+          type: String,
+          default: null
+        },
         isVerified: {
           type: Boolean,
-          notify: true
-        }
-      },
-      ready: function() {
-        if (!this.isVerified && !this.verificationString) {
-          this.$.verificationStringAjax.generateRequest();
+          notify: true,
+          default: false
         }
       },
       btnVerifyClick: function() {
         if (!this.isVerified) {
           this.$.verifyAjax.generateRequest();
+        }
+      },
+      isVerifiedLoaded: function() {
+        if (!this.isVerified && !this.verificationString) {
+          this.$.verificationStringAjax.generateRequest();
         }
       },
       textVerificationStringClick: function() {
