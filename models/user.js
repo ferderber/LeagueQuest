@@ -57,6 +57,10 @@ var userSchema = new Schema({
       type: Boolean,
       required: true,
       default: false
+    },
+    created: {
+      type: Date,
+      default: Date.now
     }
   }]
 });

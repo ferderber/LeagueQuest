@@ -9,21 +9,21 @@
     <paper-material class="quest" elevation="1">
       <div>
         <span class="questProp">Title:</span>
-        <span>{{quest.title}}</span>
+        <span>{{quest.details.title}}</span>
       </div>
       <div>
         <span class="questProp">Description:</span>
-        <span>{{quest.description}}</span>
+        <span>{{quest.details.description}}</span>
       </div>
       <div>
         <span class="questProp">Points:</span>
-        <span>{{quest.points}}</span>
+        <span>{{quest.details.points}}</span>
       </div>
-      <template is="dom-repeat" items="{{quest.objectives}}" as="objective">
+      <template is="dom-repeat" items="{{objectives}}" as="objective">
         <div>
           <span class="questProp">{{objective.objective}}</span>:
           <span>{{objective.progress}}</span>/
-          <span>{{objective.value}}</span>
+          <span>{{objective.goal}}</span>
         </div>
       </template>
     </paper-material>
@@ -36,9 +36,78 @@
       quest: {
         type: Object,
         notify: true
+      },
+      objectives: {
+        type: Object,
+        notify: true
       }
     },
     ready: function() {
+      var objectives = [];
+      for (var i = 0; i < this.quest.details.objectives.length; i++) {
+        for (var k = 0; k < this.quest.progress.length; k++) {
+          if (this.quest.progress[k].objective === this.quest.details.objectives[i].objective) {
+            objectives.push({
+              objective: getObjectiveString(this.quest.details.objectives[i].objective),
+              goal: this.quest.details.objectives[i].value,
+              progress: this.quest.progress[k].value
+            });
+          }
+        }
+      }
+      this.objectives = objectives;
+      console.log(this.objectives);
     }
   });
+
+  function getObjectiveString(key) {
+    var objectiveStrings = [{
+      key: 'wardsPlaced',
+      value: 'Wards Placed',
+    }, {
+      key: 'wardsKilled',
+      value: 'Wards Destroyed'
+    }, {
+      key: 'kills',
+      value: 'Kills'
+    }, {
+      key: 'deaths',
+      value: 'Deaths'
+    }, {
+      key: 'tripleKills',
+      value: 'Triple Kills'
+    }, {
+      key: 'quadraKills',
+      value: 'Quadra Kills'
+    }, {
+      key: 'pentaKills',
+      value: 'Penta Kills'
+    }, {
+      key: 'neutralMinionsKilledEnemyJungle',
+      value: 'Enemy jungle minions killed'
+    }, {
+      key: 'neutralMinionsKilled',
+      value: 'Jungle minions killed'
+    }, {
+      key: 'healingDone',
+      value: 'Healing'
+    }, {
+      key: 'damageTaken',
+      value: 'Damage Taken'
+    }, {
+      key: 'doubleKills',
+      value: 'Double Kills'
+    }, {
+      key: 'numGames',
+      value: 'Number of Games'
+    }];
+    for (var i = 0; i < objectiveStrings.length; i++) {
+      if (objectiveStrings[i].key === key) {
+
+        console.log(objectiveStrings[i].value);
+        return objectiveStrings[i].value;
+      }
+    }
+    return key;
+  }
 </script>
