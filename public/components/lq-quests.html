@@ -14,10 +14,23 @@
   <link rel="import" type="css" href="css/lq-quests.css">
   <template>
     <template is="dom-if" if="{{contentLoaded}}">
-      <div class="questList">
-        <template is="dom-repeat" items="{{quests}}">
-          <lq-quest quest="{{item}}"></lq-quest>
-        </template>
+      <div id="questList" class="questList">
+        <paper-material elevation="3">
+          <h2>Active Quests</h2>
+          <template is="dom-repeat" items="{{quests}}">
+            <template is="dom-if" if="{{!item.complete}}">
+              <lq-quest quest="{{item}}"></lq-quest>
+            </template>
+          </template>
+        </paper-material>
+        <paper-material elevation="3">
+          <h2>Completed Quests</h2>
+          <template is="dom-repeat" items="{{quests}}">
+            <template is="dom-if" if="{{item.complete}}">
+              <lq-quest quest="{{item}}"></lq-quest>
+            </template>
+          </template>
+        </paper-material>
       </div>
     </template>
     <template is="dom-if" if="{{!contentLoaded}}">

@@ -44,7 +44,6 @@ router.post('/getQuests', isAuthenticated, function (req, res) {
           Quest.findOne({
             title: "Lux Beginner"
           }, function (err, quest) {
-            console.log(quest);
             addQuest(u, quest, function (u) {
               User.populate(u, 'quests.details', function (err, u) {
                 if (err)
@@ -114,10 +113,11 @@ function updateQuests(u, callback) {
       if (err)
         throw err;
       u.quests.forEach(function (quest) {
-        if (!quest.completed)
+        console.log(quest.complete);
+        if (!quest.complete)
           matchHistory.games.forEach(function (game) {
-            if (game.createDate < quest.created.getTime()) {
-              if (typeof (quest.details.champion) === 'undefined' || quest.details.champion === game.championId) {
+            if (game.createDate > quest.created.getTime()) {
+              if (quest.details.champion === undefined || quest.details.champion === null || quest.details.champion === game.championId) {
                 var isNumGames = false;
                 var completed = true;
                 var numGames = 0;
@@ -125,46 +125,73 @@ function updateQuests(u, callback) {
                 for (var i = 0; i < quest.progress.length; i++) {
                   switch (quest.progress[i].objective) {
                     case 'kills':
-                      quest.progress[i].value += game.stats.kills;
+                      quest.progress[i].value += game.stats.championsKilled;
+                      console.log(game.stats.championsKilled);
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'deaths':
                       quest.progress[i].value += game.stats.deaths;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'numGames':
                       isNumGames = true;
                       quest.progress[i].value += 1;
                       numGames = quest.details.objectives[i].value;
                       numGamesCompleted = quest.progress[i].value;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'doubleKills':
                       quest.progress[i].value += game.stats.doubleKills;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'tripleKills':
                       quest.progress[i].value += game.stats.tripleKills;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'quadraKills':
                       quest.progress[i].value += game.stats.quadraKills;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'pentaKills':
                       quest.progress[i].value += game.stats.pentaKills;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'neutralMinionsKilledEnemyJungle':
                       quest.progress[i].value += game.stats.neutralMinionsKilledEnemyJungle;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'neutralMinionsKilled':
                       quest.progress[i].value += game.stats.neutralMinionsKilled;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'healingDone':
                       quest.progress[i].value += game.stats.healingDone;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'damageTaken':
                       quest.progress[i].value += game.stats.damageTaken;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'wardsPlaced':
                       quest.progress[i].value += game.stats.wardsPlaced;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                     case 'wardsKilled':
                       quest.progress[i].value += game.stats.wardsKilled;
+                      if (quest.progress[i].value > quest.details.objectives[i].value)
+                        quest.progress[i].value = quest.details.objectives[i].value;
                       break;
                   }
                   if (quest.progress[i].value < quest.details.objectives[i].value && quest.progress[i].objective !== 'numGames') {
@@ -173,7 +200,7 @@ function updateQuests(u, callback) {
                 }
                 if (completed) {
                   console.log('Quest Complete!');
-                  quest.completed = true;
+                  quest.complete = true;
                 } else if (isNumGames) {
                   if (numGamesCompleted >= numGames)
                     quest.progress = resetProgress(quest.progress);
@@ -187,7 +214,14 @@ function updateQuests(u, callback) {
             // console.log('champion id ' + game.championId);
           });
       });
-      callback(u);
+      console.log(u.quests);
+      console.log(u.quests[1].progress[0]);
+      u.save(function (err) {
+        if (err)
+          console.log(err);
+        console.log('it got here');
+        callback(u);
+      });
     });
   } else {
     callback(u);
