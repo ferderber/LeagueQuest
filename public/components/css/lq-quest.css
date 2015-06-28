@@ -3,5 +3,6 @@
   background-color: var(--paper-blue-400);
   color: #ffffff;
   font-size: 1.2em;
+  margin-bottom: 10px;
 }
 .questProp {}

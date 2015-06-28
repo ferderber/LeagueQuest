@@ -43,7 +43,8 @@ passport.deserializeUser(function (user, done) {
 
   User.findById(user._id).populate({
     path: 'quests.details',
-    model: 'Quest'}).exec(function (err, u) {
+    model: 'Quest'
+  }).exec(function (err, u) {
     if (err)
       throw err;
     done(null, u);
@@ -156,7 +157,7 @@ function addQuests() {
     "type": 0,
     "description": "Steal 5 enemy jungle camps in one game",
     "points": 20,
-    "objective": [{
+    "objectives": [{
       "objective": "numGames",
       "value": 1
     }, {
@@ -177,6 +178,27 @@ function addQuests() {
     }, {
       "objective": "neutralMinionsKilled",
       "value": 25
+    }]
+  }, {
+    "title": "sample",
+    "type": 0,
+    "description": "sample",
+    "points": 100,
+    "objectives": [{
+      "objective": "kills",
+      "value": 5
+    }]
+  }, {
+    "title": "sample2",
+    "type": 0,
+    "description": "sample2desc",
+    "points": 100,
+    "objectives": [{
+      "objective": "kills",
+      "value": 10
+    }, {
+      "objective": "numGames",
+      "value": 2
     }]
   }];
   Quest.count({}, function (err, count) {

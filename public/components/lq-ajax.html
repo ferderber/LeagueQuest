@@ -11,11 +11,14 @@
     is: "lq-ajax",
     properties: {
       url: String,
-      cache: String
+      cache: String,
+      body: String
     },
     generateRequest: function() {
       var isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
       if (isAuthenticated != null && isAuthenticated === true) {
+        if(this.body !== undefined)
+          this.$.ironAjax.params = this.body;
         if (this.cache != null) {
           var cachedItem = localStorage.getItem(this.cache);
           if (cachedItem !== 'undefined')

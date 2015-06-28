@@ -46,13 +46,20 @@ var questSchema = new Schema({
     // neutralMinionsKilledEnemyJungle: Number
 });
 
-questSchema.statics.random = function(cb) {
-  this.count(function(err, count) {
+questSchema.statics.random = function (quests, cb) {
+  var ids = [];
+  if (quests.length > 0) {
+    for (var i = 0; i < quests.length; i++) {
+      ids.push(quests.details._id);
+    }
+  }
+  console.log(ids);
+  this.count(function (err, count) {
     if (err) {
       return cb(err);
     }
     var rand = Math.floor(Math.random() * count);
-    this.findOne().skip(rand).exec(cb);
+    this.find().findOne().skip(rand).exec(cb);
   }.bind(this));
 };
 module.exports = mongoose.model('Quest', questSchema);

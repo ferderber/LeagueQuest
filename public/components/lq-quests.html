@@ -20,11 +20,10 @@
         </template>
       </div>
     </template>
-
     <template is="dom-if" if="{{!contentLoaded}}">
       <paper-progress indeterminate alue="800" min="100" max="1000" class="blue" value="100"></paper-progress>
     </template>
-    <lq-ajax id="questAjax" url="/quest/getQuests" on-response="handleQuestResponse"></lq-ajax>
+    <lq-ajax id="questAjax" url="/quest/getQuests" cache="questStorage" on-response="handleQuestResponse"></lq-ajax>
     <!-- <lq-ajax id="questAjax" url="/quest/checkStatus" on-response="handleQuestResponse"></lq-ajax> -->
     <iron-localstorage name="matchHistoryStorage" value="matchHistory"></iron-localstorage>
     <iron-localstorage name="questStorage" value="{{quests}}"></iron-localstorage>

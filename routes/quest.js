@@ -31,28 +31,41 @@ function isAuthenticated(req, res, next) {
 
 }
 router.post('/getQuests', isAuthenticated, function (req, res) {
-  User.findOne({
-    email: req.user.email
-  }, function (err, user) {
-    if (err) {
-      throw err;
-    }
-    console.log(updateQuests(req.user));
-    if (user.quests.length === 0) {
-      Quest.random(function (err, quest) {
-        addQuest(req.user, quest, function (u) {
-          return res.send({
-            quests: u.quests
+  // User.findOne({
+  //   email: req.user.email
+  // }, function (err, user) {
+  //   if (err) {
+  //     throw err;
+  //   }
+  updateQuests(req.user, function (u) {
+    if (u.quests.length === 0) {
+      Quest.random(u.quests, function (err, quest) {
+        addQuest(u, quest, function (u) {
+          Quest.findOne({
+            title: "Lux Beginner"
+          }, function (err, quest) {
+            console.log(quest);
+            addQuest(u, quest, function (u) {
+              User.populate(u, 'quests.details', function (err, u) {
+                if (err)
+                  throw err;
+                return res.send({
+                  quests: u.quests
+                });
+              });
+            });
           });
         });
       });
     } else {
 
       return res.send({
-        quests: req.user.quests
+        quests: u.quests
       });
     }
   });
+
+  // });
 });
 router.post('/acceptQuest', isAuthenticated, function (req, res) {
   return res.send({
@@ -94,7 +107,8 @@ function addQuest(u, q, callback) {
   });
 }
 
-function updateQuests(u) {
+function updateQuests(u, callback) {
+  console.log('thing');
   if (u.quests.length > 0) {
     lolapi.Game.getBySummonerId(u.summonerId, options, function (err, matchHistory) {
       if (err)
@@ -103,7 +117,7 @@ function updateQuests(u) {
         if (!quest.completed)
           matchHistory.games.forEach(function (game) {
             if (game.createDate < quest.created.getTime()) {
-              if (quest.champion === null || quest.champion === game.championId) {
+              if (typeof (quest.details.champion) === 'undefined' || quest.details.champion === game.championId) {
                 var isNumGames = false;
                 var completed = true;
                 var numGames = 0;
@@ -153,7 +167,7 @@ function updateQuests(u) {
                       quest.progress[i].value += game.stats.wardsKilled;
                       break;
                   }
-                  if (quest.progress[i].value < quest.objectives[i].value && quest.progress[i].objective !== 'numGames') {
+                  if (quest.progress[i].value < quest.details.objectives[i].value && quest.progress[i].objective !== 'numGames') {
                     completed = false;
                   }
                 }
@@ -173,8 +187,10 @@ function updateQuests(u) {
             // console.log('champion id ' + game.championId);
           });
       });
-      return u;
+      callback(u);
     });
+  } else {
+    callback(u);
   }
 }
 

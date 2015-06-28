@@ -2,11 +2,12 @@
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="lq-ajax.html">
 
 <dom-module id="lq-quest">
   <link rel="import" type="css" href="css/lq-quest.css">
   <template>
-    <paper-material class="quest" elevation="1">
+    <paper-material id="questItem" class="quest" elevation="3">
       <div>
         <span class="questProp">Title:</span>
         <span>{{quest.details.title}}</span>
@@ -15,6 +16,12 @@
         <span class="questProp">Description:</span>
         <span>{{quest.details.description}}</span>
       </div>
+      <template is="dom-if" if="{{quest.details.champion}}">
+        <div>
+          <span class="questProp">Champion:</span>
+          <span>{{champion.name}}</span>
+        </div>
+      </template>
       <div>
         <span class="questProp">Points:</span>
         <span>{{quest.details.points}}</span>
@@ -27,6 +34,8 @@
         </div>
       </template>
     </paper-material>
+    <lq-ajax id="championAjax" url="/api/getChampion" cache="championStorage" on-response="handleChampionResponse"></lq-ajax>
+    <!-- <iron-localstorage name="championStorage" value="{{championStorage}}"></iron-localstorage> -->
   </template>
 </dom-module>
 <script>
@@ -40,9 +49,34 @@
       objectives: {
         type: Object,
         notify: true
+      },
+      champion: {
+        type: Object
+      },
+      splashUrl: {
+        type: String,
+        computed: 'getSplashUrl(champion.key)',
+        readonly: true,
+        notify: true
       }
     },
+    getSplashUrl: function(key) {
+      return 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/' + key + '_0.jpg'
+    },
+    handleChampionResponse: function(r) {
+      console.log(r.detail);
+      this.champion = r.detail;
+      // this.$.questItem.style.background = 'url("' + this.getSplashUrl(this.champion.key) + '") no-repeat left top';
+      // this.$.questItem.style.backgroundSize = 'contain';
+    },
     ready: function() {
+      console.log(this.quest);
+      if (this.quest.details.champion !== null && this.quest.details.champion !== undefined) {
+        this.$.championAjax.body = {
+          champion: this.quest.details.champion
+        };
+        this.$.championAjax.generateRequest();
+      }
       var objectives = [];
       for (var i = 0; i < this.quest.details.objectives.length; i++) {
         for (var k = 0; k < this.quest.progress.length; k++) {
