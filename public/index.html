@@ -6,11 +6,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+  <script>
+    function checkUrl() {
+      var newUrls = [
+        '/login',
+        '/signup',
+        '/home'
+      ];
+      var authUrls = [
+        '/quest',
+        '/user',
+        '/settings',
+        '/home'
+      ];
+      var isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
+      if (!isAuthenticated) {
+        console.log(window.location.href);
+        for (var i = 0; i < authUrls.length; i++) {
+          if (window.location.href.indexOf(authUrls[i]) !== -1) {
+            window.location.href = createUrl('login');
+            console.log('home');
+            break;
+          }
+        }
+      } else {
+        for (var i = 0; i < newUrls.length; i++) {
+          if (window.location.href.indexOf(newUrls[i]) !== -1) {
+            window.location.href = createUrl('');
+            console.log('send home');
+            break;
+          }
+        }
+
+      }
+    }
+
+    function createUrl(path) {
+      var url = window.location.href;
+      if (url.indexOf('/#') !== -1) {
+        url = url.substring(0, url.indexOf('/#') + 2) + '!/' + path;
+      } else {
+        url += path;
+      }
+      console.log(url);
+      return url;
+    }
+  </script>
+
+  <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
   <link rel="import" href="components/lq-app.html">
 </head>
 
-<body>
+<body onload="checkUrl()">
   <lq-app></lq-app>
 </body>
 

@@ -180,22 +180,22 @@ function addQuests() {
       "value": 25
     }]
   }, {
-    "title": "sample",
+    "title": "Sample quest 1",
     "type": 0,
-    "description": "sample",
+    "description": "Get 5 kills C:",
     "points": 100,
     "objectives": [{
       "objective": "kills",
       "value": 5
     }]
   }, {
-    "title": "sample2",
+    "title": "Sample quest 2",
     "type": 0,
-    "description": "sample2desc",
+    "description": "Super difficult quest to get 10 kills in 2 games",
     "points": 100,
     "objectives": [{
       "objective": "kills",
-      "value": 10
+      "value": 20
     }, {
       "objective": "numGames",
       "value": 2

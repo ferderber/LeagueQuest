@@ -14,6 +14,12 @@ var options = {
   cacheTTL: 7200
 };
 
+
+function getDate() {
+  var now = new Date();
+  return now.toJSON();
+}
+
 function isAuthenticated(req, res, next) {
   if (req.user)
     User.count({
@@ -31,12 +37,6 @@ function isAuthenticated(req, res, next) {
 
 }
 router.post('/getQuests', isAuthenticated, function (req, res) {
-  // User.findOne({
-  //   email: req.user.email
-  // }, function (err, user) {
-  //   if (err) {
-  //     throw err;
-  //   }
   updateQuests(req.user, function (u) {
     if (u.quests.length === 0) {
       Quest.random(u.quests, function (err, quest) {
@@ -49,7 +49,8 @@ router.post('/getQuests', isAuthenticated, function (req, res) {
                 if (err)
                   throw err;
                 return res.send({
-                  quests: u.quests
+                  quests: u.quests,
+                  date: getDate()
                 });
               });
             });
@@ -57,10 +58,29 @@ router.post('/getQuests', isAuthenticated, function (req, res) {
         });
       });
     } else {
-
-      return res.send({
-        quests: u.quests
-      });
+      if (questsCompleted(u.quests)) {
+        console.log('new quests incoming');
+        Quest.random(u.quests, function (err, quest) {
+          addQuest(u, quest, function (u) {
+            Quest.random(u.quests, function (err, quest) {
+              addQuest(u, quest, function (u) {
+                User.populate(u, 'quests.details', function (err, u) {
+                  if (err)
+                    throw err;
+                  return res.send({
+                    quests: u.quests,
+                    date: getDate()
+                  });
+                });
+              });
+            });
+          });
+        });
+      } else
+        return res.send({
+          quests: u.quests,
+          date: getDate()
+        });
     }
   });
 
@@ -85,6 +105,16 @@ function errHandler(err, res) {
       message: err
     }
   });
+}
+
+function questsCompleted(quests) {
+  for (var i = 0; i < quests.length; i++) {
+    if (!quests[i].complete) {
+      console.log('QUEST NOT COMPLETE');
+      return false;
+    }
+  }
+  return true;
 }
 
 function addQuest(u, q, callback) {

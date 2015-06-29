@@ -7,6 +7,8 @@
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../bower_components/paper-progress/paper-progress.html">
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="lq-ajax.html">
 <link rel="import" href="lq-quest.html">
 
@@ -14,24 +16,20 @@
   <link rel="import" type="css" href="css/lq-quests.css">
   <template>
     <template is="dom-if" if="{{contentLoaded}}">
-      <div id="questList" class="questList">
-        <paper-material elevation="3">
+      <paper-material id="questList" elevation="4" class="quest-list">
+        <div elevation="3" hidden$="{{isEmpty(1)}}">
           <h2>Active Quests</h2>
           <template is="dom-repeat" items="{{quests}}">
-            <template is="dom-if" if="{{!item.complete}}">
-              <lq-quest quest="{{item}}"></lq-quest>
-            </template>
+            <lq-quest hidden$="{{item.complete}}" quest="{{item}}"></lq-quest>
           </template>
-        </paper-material>
-        <paper-material elevation="3">
+        </div>
+        <div elevation="3" hidden$="{{isEmpty(0)}}">
           <h2>Completed Quests</h2>
           <template is="dom-repeat" items="{{quests}}">
-            <template is="dom-if" if="{{item.complete}}">
-              <lq-quest quest="{{item}}"></lq-quest>
-            </template>
+            <lq-quest hidden$="{{!item.complete}}" quest="{{item}}"></lq-quest>
           </template>
-        </paper-material>
-      </div>
+        </div>
+      </paper-material>
     </template>
     <template is="dom-if" if="{{!contentLoaded}}">
       <paper-progress indeterminate alue="800" min="100" max="1000" class="blue" value="100"></paper-progress>
@@ -41,6 +39,7 @@
     <iron-localstorage name="matchHistoryStorage" value="matchHistory"></iron-localstorage>
     <iron-localstorage name="questStorage" value="{{quests}}"></iron-localstorage>
     <iron-localstorage name="summonerStorage" value="{{summoner}}"></iron-localstorage>
+    <paper-fab mini icon="refresh" on-click="refreshContent" style="position: fixed; bottom: 5px; right: 5px;"></paper-fab>
   </template>
 </dom-module>
 <script>
@@ -65,19 +64,42 @@
       this.$.questAjax.generateRequest();
       // this.$.summaryAjax.generateRequest();
     },
-    handleQuestResponse: function(r) {
-      var quests = [];
-      // quests.push(r.detail.quest);
-      this.quests = r.detail.quests;
-      console.log(this.quests);
-      this.contentLoaded = true;
+    isEmpty: function(isComplete) {
+      if (this.quests != null) {
+        if (isComplete === 0) {
+          isComplete = true;
+        } else {
+          isComplete = false;
+        }
+        var completedQuests = false;
+        var inProgressQuests = false;
+        for (var i = 0; i < this.quests.length; i++) {
+          console.log(this.quests[i].complete !== isComplete);
+          if (this.quests[i].complete) {
+            completedQuests = true;
+          } else {
+            inProgressQuests = true;
+          }
+        }
+        if (isComplete && completedQuests) {
+          return false;
+        } else if (!isComplete && inProgressQuests) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
     },
-    handleSummonerResponse: function(r) {
-      var summoner = r.detail;
-      this.summoner = summoner;
+    refreshContent: function() {
+      this.contentLoaded = false;
+      // this.set('quests', null);
+      this.$.questAjax.generateRequest(true);
+    },
+    handleQuestResponse: function(r) {
+      this.set('quests', r.detail.quests);
       this.contentLoaded = true;
-      this.$.rankedSelector.focus();
-      this.$.rankedSelector.blur();
     },
   });
 </script>

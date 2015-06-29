@@ -47,13 +47,13 @@ var questSchema = new Schema({
 });
 
 questSchema.statics.random = function (quests, cb) {
-  var ids = [];
-  if (quests.length > 0) {
-    for (var i = 0; i < quests.length; i++) {
-      ids.push(quests.details._id);
-    }
-  }
-  console.log(ids);
+  // var ids = [];
+  // if (quests.length > 0) {
+  //   for (var i = 0; i < quests.length; i++) {
+  //     ids.push(quests.details._id);
+  //   }
+  // }
+  // console.log(ids);
   this.count(function (err, count) {
     if (err) {
       return cb(err);

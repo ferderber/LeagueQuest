@@ -29,8 +29,7 @@
       <template is="dom-repeat" items="{{objectives}}" as="objective">
         <div>
           <span class="questProp">{{objective.objective}}</span>:
-          <span>{{objective.progress}}</span>/
-          <span>{{objective.goal}}</span>
+          <span>{{objective.progress}}</span>/<span>{{objective.goal}}</span>
         </div>
       </template>
     </paper-material>
@@ -64,13 +63,11 @@
       return 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/' + key + '_0.jpg'
     },
     handleChampionResponse: function(r) {
-      console.log(r.detail);
       this.champion = r.detail;
       // this.$.questItem.style.background = 'url("' + this.getSplashUrl(this.champion.key) + '") no-repeat left top';
       // this.$.questItem.style.backgroundSize = 'contain';
     },
     ready: function() {
-      console.log(this.quest);
       if (this.quest.details.champion !== null && this.quest.details.champion !== undefined) {
         this.$.championAjax.body = {
           champion: this.quest.details.champion
@@ -90,7 +87,6 @@
         }
       }
       this.objectives = objectives;
-      console.log(this.objectives);
     }
   });
 
@@ -137,8 +133,6 @@
     }];
     for (var i = 0; i < objectiveStrings.length; i++) {
       if (objectiveStrings[i].key === key) {
-
-        console.log(objectiveStrings[i].value);
         return objectiveStrings[i].value;
       }
     }

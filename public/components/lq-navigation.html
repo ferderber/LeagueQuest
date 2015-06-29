@@ -12,33 +12,33 @@
     <nav>
       <paper-tabs id="tabNavigation" selected="0" noink no-slide>
         <paper-tab id="homeTab" link>
-          <a id="homeLink" is="pushstate-anchor" name="home" href="#!/home" class="logo horizontal center-center layout">
+          <a id="homeLink" name="home" href="#!/" on-click="linkHandler" class="logo horizontal center-center layout">
             <h1>LQ</h1>
             <!--<img src="../images/templogo.png" width="128px" height="48px">-->
           </a>
         </paper-tab>
         <paper-tab id="questTab" hidden="{{!isAuthenticated}}" link>
-          <a id="questLink" is="pushstate-anchor" name="quest" href="#!/quest" class="horizontal center-center layout">
+          <a id="questLink" name="quest" href="#!/quest" on-click="linkHandler" class="horizontal center-center layout">
             <h3>Quests</h3>
           </a>
         </paper-tab>
         <paper-tab id="userTab" hidden="{{!isAuthenticated}}" link>
-          <a id="userLink" is="pushstate-anchor" name="user" href="#!/user" class="horizontal center-center layout">
+          <a id="userLink" name="user" href="#!/user" on-click="linkHandler" class="horizontal center-center layout">
             <h3>Profile</h3>
           </a>
         </paper-tab>
         <paper-tab id="loginTab" hidden="{{isAuthenticated}}" link>
-          <a id="loginLink" is="pushstate-anchor" name="login" href="#!/login" class="horizontal center-center layout">
+          <a id="loginLink" name="login" href="#!/login" on-click="linkHandler" class="horizontal center-center layout">
             <h3>Login</h3>
           </a>
         </paper-tab>
         <paper-tab id="signupTab" hidden="{{isAuthenticated}}" link>
-          <a id="signupLink" is="pushstate-anchor" name="signup" href="#!/signup" class="horizontal center-center layout">
+          <a id="signupLink" name="signup" href="#!/signup" on-click="linkHandler" class="horizontal center-center layout">
             <h3>Signup</h3>
           </a>
         </paper-tab>
         <paper-tab id="settingsTab" hidden="{{!isAuthenticated}}" link>
-          <a id="settingsLink" is="pushstate-anchor" name="settings" href="#!/settings" class="horizontal center-center layout">
+          <a id="settingsLink" name="settings" href="#!/settings" on-click="linkHandler" class="horizontal center-center layout">
             <iron-icon icon="settings"></iron-icon>
           </a>
         </paper-tab>
@@ -61,12 +61,21 @@
     },
     ready: function() {
       this.isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
+      // var links = this.$.tabNavigation.querySelectorAll('#tabsContainer div paper-tab div a');
+      // for (var i = 0; i < links.length; i++) {
+      //   links[i].onclick = this.linkHandler;
+      // }
+      // cool code keep it for later
     },
     attached: function() {
       this.changeNavigation(window.location.href.substring(window.location.href.indexOf('#') + 1));
     },
     stateChangeHandler: function(e) {
       this.isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
+      this.setNavigation();
+      this.changeNavigation(e.detail.path);
+    },
+    setNavigation: function() {
       if (this.isAuthenticated) {
         this.$.settingsTab.hidden = false;
         this.$.userTab.hidden = false;
@@ -82,12 +91,10 @@
         this.$.loginTab.hidden = false;
         this.$.signupTab.hidden = false;
       }
-      this.changeNavigation(e.detail.path);
     },
     changeNavigation: function(path) {
-      console.log(path);
       var urls = [{
-        path: '/home',
+        path: '/',
         control: 'homeLink'
       }, {
         path: '/quest',
@@ -108,10 +115,19 @@
       for (var i = 0; i < urls.length; i++) {
         if (path.toLowerCase().indexOf(urls[i].path) !== -1) {
           document.getElementById('tabNavigation').selected = i;
-          console.log(urls[i].path);
         }
       }
-
+    },
+    linkHandler: function(e) {
+      if (window.location.href.indexOf(e.currentTarget.href) !== -1 && e.currentTarget.href === window.location.href) {
+        e.preventDefault();
+        return false;
+      } else {
+        this.isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
+        this.changeNavigation(e.currentTarget.href);
+        this.setNavigation();
+      }
+      return false;
     }
   });
 </script>

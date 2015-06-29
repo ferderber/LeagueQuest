@@ -51,5 +51,11 @@ router.post('/getChampion', isAuthenticated, function (req, res) {
     res.send(champion);
   });
 });
+router.post('/getAllChampion', isAuthenticated, function (req, res) {
+  lolapi.Static.getAllChampions(function (err, champion) {
+    champion.date = getDate();
+    res.send(champion);
+  });
+});
 
 module.exports = router;

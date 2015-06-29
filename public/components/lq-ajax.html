@@ -14,16 +14,16 @@
       cache: String,
       body: String
     },
-    generateRequest: function() {
+    generateRequest: function(force) {
       var isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
       if (isAuthenticated != null && isAuthenticated === true) {
-        if(this.body !== undefined)
+        if (this.body !== undefined)
           this.$.ironAjax.params = this.body;
         if (this.cache != null) {
           var cachedItem = localStorage.getItem(this.cache);
           if (cachedItem !== 'undefined')
             cachedItem = JSON.parse(cachedItem);
-          if (cachedItem == null || isExpired(cachedItem))
+          if (cachedItem == null || isExpired(cachedItem) || force)
             this.$.ironAjax.generateRequest();
           else
             this.fire('response', cachedItem);
@@ -32,7 +32,7 @@
         }
       } else {
         console.log('isAuth is false?');
-        // document.querySelector('app-router').go('/');
+        document.querySelector('app-router').go('/');
       }
     },
     handleResponse: function(r) {
@@ -49,7 +49,7 @@
   });
 
 
-  function isExpired(obj) {
+  function isExpired(obj, minutes) {
     if (obj != null) {
       var objDate = new Date(obj.date);
       var thirtyMinutesAgo = new Date(new Date() - 30 * 60000);

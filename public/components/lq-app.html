@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/pushstate-anchor/pushstate-anchor.html">
 <link rel="import" href="../bower_components/app-router/app-router.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <link rel="import" href="lq-navigation.html">
 
 <dom-module id="lq-app">
@@ -17,6 +18,7 @@
       <app-route path="/user" import="/components/summoner-summary.html"></app-route>
       <app-route path="/settings" import="/components/lq-settings.html"></app-route>
     </app-router>
+    <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
   </template>
 </dom-module>
 
@@ -33,11 +35,9 @@
       document.querySelector('#router').addEventListener('state-change', this.stateChange.bind(this));
     },
     stateChange: function(e) {
+      console.log('test');
       this.$.navigation.fire('stateChange', e.detail);
 
     },
-    initAuthStorage: function() {
-      this.isAuthenticated = false;
-    }
   });
 </script>

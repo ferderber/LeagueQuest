@@ -1,3 +1,13 @@
-.questList {
+.quest-list {
+  padding: 20px;
+}
+.quest-list div {
+  margin-bottom: 20px;
+}
 
+paper-progress {
+  width: 100%;
+}
+paper-progress > #progressContainer > #activeProgress {
+  background-color: #03a9f4;
 }

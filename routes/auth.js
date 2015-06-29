@@ -117,7 +117,7 @@ router.post('/signup', function (req, res) {
       } else {
         req.login(u, function (err) {
           if (err) {
-            console.log(err);
+            throw err;
           }
           return res.send({
             isAuthenticated: true,
@@ -130,7 +130,7 @@ router.post('/signup', function (req, res) {
 
   });
 });
-router.post('/getVerificationString', function (req, res) {
+router.post('/getVerificationString', isAuthenticated, function (req, res) {
   if (req.user.verificationString) {
     return res.send({
       verificationString: req.user.verificationString
@@ -145,7 +145,7 @@ router.post('/verifyUser', isAuthenticated, function (req, res) {
     var pages = runes[req.user.summonerId].pages;
     for (var i = 0; i < pages.length; i++) {
       if (req.user.verificationString === pages[i].name) {
-        console.log('Verified');
+        console.log(req.user.email + ' is verified');
         User.findOne({
             'email': req.user.email
           },
@@ -166,8 +166,8 @@ router.post('/verifyUser', isAuthenticated, function (req, res) {
   });
 });
 router.post('/logout', function (req, res) {
+  console.log(req.user.email + ' Logged out');
   req.logout();
-  console.log('logged out');
   res.send({
     isAuthenticated: false
   });
