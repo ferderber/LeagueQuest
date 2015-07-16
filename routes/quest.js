@@ -142,10 +142,10 @@ function updateQuests(u, callback) {
     lolapi.Game.getBySummonerId(u.summonerId, options, function (err, matchHistory) {
       if (err)
         throw err;
-      u.quests.forEach(function (quest) {
-        console.log(quest.complete);
+      for (var quest of u.quests) {
         if (!quest.complete)
-          matchHistory.games.forEach(function (game) {
+          for (var game of matchHistory.games) {
+            console.log('game time: ' + game.createDate + '     quest time: ' + quest.created.getTime() + '           ' + game.createDate > quest.created.getTime());
             if (game.createDate > quest.created.getTime()) {
               if (quest.details.champion === undefined || quest.details.champion === null || quest.details.champion === game.championId) {
                 var isNumGames = false;
@@ -242,8 +242,8 @@ function updateQuests(u, callback) {
             // console.log(game.gameId);
             // console.log(game.gameMode);
             // console.log('champion id ' + game.championId);
-          });
-      });
+          }
+      }
       console.log(u.quests);
       console.log(u.quests[1].progress[0]);
       u.save(function (err) {
