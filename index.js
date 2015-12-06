@@ -53,6 +53,7 @@ passport.deserializeUser(function (user, done) {
 var auth = require('./routes/auth.js');
 var quests = require('./routes/quest.js');
 var api = require('./routes/api.js');
+var stats = require('./routes/stats.js');
 app.use(express.static('public'));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 app.use(cookieParser());
@@ -71,6 +72,7 @@ addQuests();
 app.use('/auth', auth);
 app.use('/quest', quests);
 //app.use('/user', user);
+app.use('/stats', stats);
 app.use('/api', api);
 
 function addQuests() {
@@ -128,7 +130,7 @@ function addQuests() {
   }, {
     "title": "Support Pro",
     "type": 0,
-    "description": "Destroy a total of 500 wards, place 500 wards and heal 10000hp",
+    "description": "Destroy a total of 500 wards, place 500 wards and heal 10000 hp",
     "points": 25,
     "objectives": [{
       "objective": "wardsKilled",

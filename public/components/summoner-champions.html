@@ -1,0 +1,84 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="summoner-champion.html">
+<link rel="import" href="lq-ajax.html">
+
+<dom-module id="summoner-champions">
+  <link rel="import" type="css" href="css/summoner-champions.css">
+  <template>
+
+    <template is="dom-if" if="{{championsLoaded}}">
+      <paper-material id="champions" class="champions" elevation="3">
+        <template is="dom-repeat" items="{{champions}}">
+          <summoner-champion champion="{{item}}"></summoner-champion>
+        </template>
+      </paper-material>
+    </template>
+    <template is="dom-if" if="{{!contentLoaded}}">
+      <paper-progress indeterminate alue="800" min="100" max="1000" class="blue" value="100"></paper-progress>
+    </template>
+    <lq-ajax id="championsAjax" url="/api/getChampions" cache="championStorage" on-response="handleChampionsResponse"></lq-ajax>
+    <iron-localstorage name="championStorage" value="{{championStorage}}"></iron-localstorage>
+    <iron-localstorage name="versionStorage" value="{{version}}"></iron-localstorage>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'summoner-champions',
+    properties: {
+      champions: {
+        type: Array
+      },
+      ranked: {
+        type: Object
+      },
+      splashUrl: {
+        type: String,
+        computed: 'getSplashUrl(champion.key)',
+        readonly: true,
+        notify: true
+      },
+      championsLoaded: {
+        type: Boolean,
+        notify: true,
+        default: false
+      },
+      version: {
+        type: String,
+        notify: true,
+        default: '5.23.1'
+      }
+    },
+    getSplashUrl: function(key) {
+      return 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/' + key + '_0.jpg'
+    },
+    handleChampionsResponse: function(r) {
+      // this.champions = r.detail;
+      this.set('version', r.detail.version);
+      for (var i in r.detail.data) {
+        if (r.detail.data.hasOwnProperty(i)) {
+          var champion = r.detail.data[i];
+          for (var j = 0; j < this.champions.length; j++) {
+            if (this.champions[j].id == champion.id) {
+              this.champions[j].key = champion.key;
+              this.champions[j].name = champion.name;
+              this.champions[j].title = champion.title;
+              this.champions[j].imgURL = "https://ddragon.leagueoflegends.com/cdn/" + this.version + "/img/champion/" + champion.key + ".png";
+            }
+          }
+        }
+      }
+      this.championsLoaded = true;
+      // this.$.questItem.style.background = 'url("' + this.getSplashUrl(this.champion.key) + '") no-repeat left top';
+      // this.$.questItem.style.backgroundSize = 'contain';
+    },
+    ready: function() {
+      console.log(this.ranked);
+      this.champions = this.ranked.champions;
+      this.$.championsAjax.generateRequest();
+    }
+  });
+</script>

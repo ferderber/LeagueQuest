@@ -47,12 +47,12 @@
         if (r.detail.isAuthenticated) {
           this.isAuthenticated = true;
           this.$.authenticatedStorage.save();
-          this.isVerified = r.detail.isVerified;
-          this.verificationString = r.detail.verificationString;
+          this.isVerified = r.detail.response.isVerified;
+          this.verificationString = r.detail.response.verificationString;
           document.querySelector('app-router').go('/user');
         } else {
           this.isAuthenticated = false;
-          this.$.signupMessage.text = r.detail.message;
+          this.$.signupMessage.text = r.detail.response.message;
           this.$.signupMessage.show();
         }
       },

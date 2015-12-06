@@ -32,7 +32,14 @@
   padding: 10px;
 }
 .rankedBar {
+  display: block;
   background-color: var(--paper-blue-50);
+}
+.rankedChampions {
+  background-color: #fff;
+  display: block;
+  margin: auto;
+  padding: 20px;
 }
 paper-progress {
   width: 100%;

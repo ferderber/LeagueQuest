@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="lq-ajax.html">
+<link rel="import" href="summoner-champions.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
@@ -23,14 +24,22 @@
             <div id="summonerName">{{summoner.name}}</div>
           </div>
           <paper-material class="summonerStats" elevation="1">
-            <div>
-              Wins:
-              <span>{{rankedSummary.wins}}</span>
-            </div>
-            <div>
-              Loses:
-              <span>{{rankedSummary.losses}}</span>
-            </div>
+            <template is="dom-if" if="{{rankedChecked}}">
+              <div>
+                Wins:
+                <span>{{rankedSummary.wins}}</span>
+              </div>
+              <div>
+                Loses:
+                <span>{{rankedSummary.losses}}</span>
+              </div>
+            </template>
+            <template is="dom-if" if="{{!rankedChecked}}">
+              <div>
+                Wins:
+                <span>{{unrankedSummary.wins}}</span>
+              </div>
+            </template>
           </paper-material>
         </div>
       </paper-material>
@@ -44,11 +53,21 @@
         <paper-radio-button id="rbUnranked" name="unranked" toggles="false" label="Unranked">Unranked</paper-radio-button>
       </paper-radio-group>
     </paper-material>
+
+    <template is="dom-if" if="{{contentLoaded}}">
+      <!-- <paper-material class="rankedChampions" elevation="1"> -->
+      <summoner-champions ranked="{{ranked}}"></summoner-champions>
+      <!-- </paper-material> -->
+    </template>
     <lq-ajax id="summonerAjax" url="/api/getSummoner" cache="summonerStorage" on-response="handleSummonerResponse"></lq-ajax>
     <lq-ajax id="summaryAjax" url="/api/getPlayerSummary" cache="summaryStorage" on-response="handleSummaryResponse"></lq-ajax>
+    <lq-ajax id="rankedAjax" url="/api/getSummonerStats" cache="rankedStorage" on-response="handleRankedResponse"></lq-ajax>
+    <lq-ajax id="versionAjax" url="/api/getVersion" cache="versionStorage" on-response="handleVersionResponse"></lq-ajax>
     <iron-localstorage name="matchHistoryStorage" value="matchHistory"></iron-localstorage>
     <iron-localstorage name="summaryStorage" value="{{summary}}"></iron-localstorage>
+    <iron-localstorage name="versionStorage" value="{{version}}"></iron-localstorage>
     <iron-localstorage name="summonerStorage" value="{{summoner}}"></iron-localstorage>
+    <iron-localstorage name="rankedStorage" value="{{ranked}}"></iron-localstorage>
   </template>
 </dom-module>
 <script>
@@ -74,6 +93,14 @@
         type: Object,
         notify: true
       },
+      ranked: {
+        type: Object,
+        notify: true
+      },
+      version: {
+        type: Object,
+        notify: true
+      },
       summonerUrl: {
         type: String,
         readonly: false,
@@ -83,6 +110,11 @@
       contentLoaded: {
         type: Boolean,
         notify: true
+      },
+      rankedChecked: {
+        type: Boolean,
+        notify: true,
+        value: true
       }
     },
     _computeSummonerUrl: function(key) {
@@ -92,9 +124,15 @@
       this.contentLoaded = false;
       this.$.summonerAjax.generateRequest();
       this.$.summaryAjax.generateRequest();
+      this.$.rankedAjax.generateRequest();
+      this.$.versionAjax.generateRequest();
     },
     rankedSelectorChanged: function(r) {
-      console.log(r.srcElement.selected);
+      if (r.srcElement.selected === 'unranked') {
+        this.rankedChecked = false;
+      } else {
+        this.rankedChecked = true;
+      }
     },
     handleSummaryResponse: function(r) {
       var summary = r.detail;
@@ -102,16 +140,20 @@
       for (var i = 0; i < summary.playerStatSummaries.length; i++) {
         if (summary.playerStatSummaries[i].playerStatSummaryType ===
           'Unranked') {
-          this.unrankedSummary = summary.playerStatSummaries[
-            i];
+          this.unrankedSummary = summary.playerStatSummaries[i];
         } else if (summary.playerStatSummaries[i].playerStatSummaryType ===
           'RankedSolo5x5') {
-          this.rankedSummary = summary.playerStatSummaries[
-            i];
+          this.rankedSummary = summary.playerStatSummaries[i];
         }
       }
       this.summary = summary;
-
+    },
+    handleRankedResponse: function(r) {
+      this.ranked = r.detail;
+    },
+    handleVersionResponse: function(r) {
+      this.set('version', r.detail);
+      console.log(this.version);
     },
     handleSummonerResponse: function(r) {
       var summoner = r.detail;

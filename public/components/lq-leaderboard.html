@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="lq-leaderboard">
+  <template>
+    <template is="dom-repeat" items="{{champions}}">
+      <champion-tag champion="{{item}}"></champion-tag>
+    </template>
+    <iron-ajax url="/api/getChampions" params="{}" handle-as="json" on-response="handleChampions">
+    </iron-ajax>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'lq-leaderboard',
+    properties: {
+      champions: {
+        type: Array,
+        notify: true,
+        value: function() {
+          return [];
+        }
+      }
+    },
+    ready: function() {
+      console.log('list ready');
+
+      this.#iron - ajax.generateRequest();
+    },
+    handleChampions: function(res) {
+      var ironAjax = document.querySelector('iron-ajax');
+      var champions = res.detail.response;
+      for (var key in champions) {
+        if (champions.hasOwnProperty(key)) {
+          var obj = champions[key];
+          this.push('champions', obj);
+        }
+      }
+    }
+  });
+</script>

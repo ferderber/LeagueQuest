@@ -1,0 +1,61 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+
+<dom-module id='summoner-champion'>
+  <link rel="import" type="css" href="css/summoner-champion.css">
+  <template>
+    <paper-material class="champion">
+      <h3>{{champion.Name}}</h3>
+      <h3>Kills:
+        <span>{{champion.stats.totalChampionKills}}</span>
+      </h3>
+      <template is="dom-if" if="{{versionLoaded}}">
+        <img src="{{url}}" />
+      </template>
+      <!-- <img src="{{url}}" /> -->
+    </paper-material>
+    <iron-localstorage id="versionStorage" name="versionStorage" value="{{version}}"></iron-localstorage>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'summoner-champion',
+    properties: {
+      champion: {
+        type: Object,
+        // readonly: true,
+        notify: true,
+        observer: '_championChanged'
+      },
+      url: {
+        type: String,
+        readonly: true,
+        notify: true,
+        computed: 'computeUrl(champion)'
+      },
+      version: {
+        type: String
+      },
+      versionLoaded: {
+        type: Boolean,
+        default: false
+      }
+    },
+    computeUrl: function() {
+      // console.log(key);
+      // console.log(this.champion);
+      var c = this.champion;
+      console.log(c);
+
+      console.log(this.version);
+      return c.imgURL;
+    },
+    ready: function() {
+      this.$.versionStorage.reload();
+      this.versionLoaded =true;
+      console.log(this.version);
+    },
+    _championChanged: function() {}
+  });
+</script>

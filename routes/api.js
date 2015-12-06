@@ -37,6 +37,29 @@ router.post('/getSummoner', isAuthenticated, function (req, res) {
 
   });
 });
+
+router.post('/getMatchHistory', isAuthenticated, function (req, res) {
+  console.log('getMatchHistory: user: ' + req.user);
+  // options.region = req.user.region;
+  // lolapi.Summoner.get(req.user.summonerId, options, function (err, summoner) {
+  //   summoner = summoner[Object.keys(summoner)[0]];
+  //   summoner.date = getDate();
+  //   console.log('summoner');
+  //   res.send(summoner);
+  //
+  // });
+
+// TODO: Implement function
+});
+
+router.post('/getSummonerStats', isAuthenticated, function (req, res) {
+  options.region = req.user.region;
+  lolapi.Stats.getRanked(req.user.summonerId, function(err, ranked) {
+    ranked.date = getDate();
+    console.log('getSummonerStats');
+    res.send(ranked);
+  });
+});
 router.post('/getPlayerSummary', isAuthenticated, function (req, res) {
   options.region = req.user.region;
   lolapi.Stats.getSummary(req.user.summonerId, function (err, summary) {
@@ -51,10 +74,18 @@ router.post('/getChampion', isAuthenticated, function (req, res) {
     res.send(champion);
   });
 });
-router.post('/getAllChampion', isAuthenticated, function (req, res) {
-  lolapi.Static.getAllChampions(function (err, champion) {
-    champion.date = getDate();
-    res.send(champion);
+router.post('/getVersion', isAuthenticated, function (req, res) {
+  lolapi.Static.getVersions(function (err, versions) {
+    versions = versions[0];
+    versions.date = getDate();
+    console.log('getVersion');
+    res.send(versions);
+  });
+});
+router.post('/getChampions', isAuthenticated, function (req, res) {
+  lolapi.Static.getChampions(function (err, champions) {
+    champions.date = getDate();
+    res.send(champions);
   });
 });
 
