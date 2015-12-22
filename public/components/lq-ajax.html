@@ -39,12 +39,13 @@
       var parsedResponse = r.detail.response;
       r.stopPropagation();
       r.preventDefault();
-      if (typeof(parsedResponse.isAuthenticated) === 'undefined')
-        this.fire('response', parsedResponse);
-      else {
-        localStorage.clear();
-        document.querySelector('app-router').go('/');
-      }
+      if (parsedResponse !== null)
+        if (typeof(parsedResponse.isAuthenticated) === 'undefined')
+          this.fire('response', parsedResponse);
+        else {
+          localStorage.clear();
+          document.querySelector('app-router').go('/');
+        }
     }
   });
 

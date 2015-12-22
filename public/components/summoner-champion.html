@@ -1,19 +1,34 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 
 <dom-module id='summoner-champion'>
   <link rel="import" type="css" href="css/summoner-champion.css">
   <template>
     <paper-material class="champion">
-      <h3>{{champion.Name}}</h3>
-      <h3>Kills:
-        <span>{{champion.stats.totalChampionKills}}</span>
-      </h3>
-      <template is="dom-if" if="{{versionLoaded}}">
-        <img src="{{url}}" />
-      </template>
-      <!-- <img src="{{url}}" /> -->
+      <paper-card heading="{{champion.name}}" class="champion">
+        <div class="card-content">
+
+          <img src="{{url}}" />
+        </div>
+        <div class="card-actions">
+          <paper-icon-button icon="icons:arrow-drop-down" title="Expand" on-click="toggleInfo"></paper-icon-button>
+        </div>
+      </paper-card>
+      <iron-collapse id="champion">
+        <h3>{{champion.name}}</h3>
+        <h3>Kills:
+          <span>{{champion.data.stats.totalChampionKills}}</span>
+        </h3>
+        <h3>Deaths:
+          <span>{{champion.data.stats.totalDeathsPerSession}}</span>
+        </h3>
+      </iron-collapse>
     </paper-material>
     <iron-localstorage id="versionStorage" name="versionStorage" value="{{version}}"></iron-localstorage>
   </template>
@@ -46,15 +61,14 @@
       // console.log(key);
       // console.log(this.champion);
       var c = this.champion;
-      console.log(c);
-
-      console.log(this.version);
       return c.imgURL;
+    },
+    toggleInfo: function() {
+      this.$.champion.toggle();
     },
     ready: function() {
       this.$.versionStorage.reload();
-      this.versionLoaded =true;
-      console.log(this.version);
+      this.versionLoaded = true;
     },
     _championChanged: function() {}
   });

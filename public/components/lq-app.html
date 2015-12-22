@@ -15,7 +15,7 @@
       <app-route path="/signup" import="/components/lq-signup.html"></app-route>
       <app-route path="/login" import="/components/lq-login.html"></app-route>
       <app-route path="/quest" import="/components/lq-quests.html"></app-route>
-      <app-route path="/user" import="/components/summoner-summary.html"></app-route>
+      <app-route path="/user" import="/components/lq-summary.html"></app-route>
       <app-route path="/settings" import="/components/lq-settings.html"></app-route>
     </app-router>
     <iron-localstorage id="authStorage" name="isAuthenticated" value="{{isAuthenticated}}"></iron-localstorage>
@@ -35,7 +35,6 @@
       document.querySelector('#router').addEventListener('state-change', this.stateChange.bind(this));
     },
     stateChange: function(e) {
-      console.log('test');
       this.$.navigation.fire('stateChange', e.detail);
 
     },

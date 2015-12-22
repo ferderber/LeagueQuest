@@ -9,7 +9,6 @@
 <dom-module id="summoner-champions">
   <link rel="import" type="css" href="css/summoner-champions.css">
   <template>
-
     <template is="dom-if" if="{{championsLoaded}}">
       <paper-material id="champions" class="champions" elevation="3">
         <template is="dom-repeat" items="{{champions}}">
@@ -32,8 +31,13 @@
       champions: {
         type: Array
       },
-      ranked: {
+      championData: {
         type: Object
+      },
+      ranked: {
+        type: Object,
+        notify: true,
+        observer: '_rankedChanged'
       },
       splashUrl: {
         type: String,
@@ -57,27 +61,39 @@
     },
     handleChampionsResponse: function(r) {
       // this.champions = r.detail;
+      this.set('championData', r.detail.data);
       this.set('version', r.detail.version);
-      for (var i in r.detail.data) {
-        if (r.detail.data.hasOwnProperty(i)) {
-          var champion = r.detail.data[i];
-          for (var j = 0; j < this.champions.length; j++) {
-            if (this.champions[j].id == champion.id) {
-              this.champions[j].key = champion.key;
-              this.champions[j].name = champion.name;
-              this.champions[j].title = champion.title;
-              this.champions[j].imgURL = "https://ddragon.leagueoflegends.com/cdn/" + this.version + "/img/champion/" + champion.key + ".png";
+      this.mergeChampionData();
+    },
+    _rankedChanged: function(newRanked, oldRanked) {
+      this.set('ranked', newRanked);
+      this.mergeChampionData();
+    },
+    mergeChampionData: function() {
+      if (typeof(this.championData) !== 'undefined' && typeof(this.ranked) !== 'undefined' && this.ranked !== null && this.champions !== null) {
+        var champions = [];
+        for (var i in this.championData) {
+          if (this.championData.hasOwnProperty(i)) {
+            var champion = this.championData[i];
+            for (var j = 0; j < this.ranked.champions.length; j++) {
+              if (this.ranked.champions[j].id == champion.id) {
+                champions.push({
+                  data: this.ranked.champions[j],
+                  key: champion.key,
+                  name: champion.name,
+                  title: champion.title,
+                  imgURL: "https://ddragon.leagueoflegends.com/cdn/" + this.version + "/img/champion/" + champion.key + ".png"
+                });
+              }
             }
           }
         }
+        this.set('championsLoaded', true);
+        this.set('champions', champions);
       }
-      this.championsLoaded = true;
-      // this.$.questItem.style.background = 'url("' + this.getSplashUrl(this.champion.key) + '") no-repeat left top';
-      // this.$.questItem.style.backgroundSize = 'contain';
+
     },
     ready: function() {
-      console.log(this.ranked);
-      this.champions = this.ranked.champions;
       this.$.championsAjax.generateRequest();
     }
   });

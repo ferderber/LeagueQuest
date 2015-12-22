@@ -11,6 +11,9 @@ var userQuestSchema = new Schema({
   progress: [{
     objective: String,
     value: Number
+  }],
+  games: [{
+    gameId: Number
   }]
 });
 var userSchema = new Schema({
@@ -53,6 +56,9 @@ var userSchema = new Schema({
       objective: String,
       value: Number
     }],
+    games: [{
+      gameId: Number
+    }],
     complete: {
       type: Boolean,
       required: true,
@@ -64,7 +70,7 @@ var userSchema = new Schema({
     }
   }]
 });
-userSchema.pre('save', function (cb) {
+userSchema.pre('save', function(cb) {
   var user = this;
 
   //only hash the password if it has been modified (or is new)
@@ -72,12 +78,12 @@ userSchema.pre('save', function (cb) {
     return cb();
   }
   // generate a salt
-  bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
     if (err) {
       return cb(err);
     }
     // hash the password using our new salt
-    bcrypt.hash(user.password, salt, function (err, hash) {
+    bcrypt.hash(user.password, salt, function(err, hash) {
       if (err) {
         return cb(err);
       }
@@ -89,15 +95,15 @@ userSchema.pre('save', function (cb) {
   });
 });
 
-userSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+userSchema.methods.comparePassword = function(candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
     if (err) return cb(err);
     console.log(isMatch);
     cb(null, isMatch);
   });
 };
 userSchema.set('toJSON', {
-  transform: function (doc, ret, options) {
+  transform: function(doc, ret, options) {
     delete ret.password;
     return ret;
   }
